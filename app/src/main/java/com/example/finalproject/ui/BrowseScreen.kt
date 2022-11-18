@@ -1,4 +1,4 @@
-package com.example.finalproject.ui.theme
+package com.example.finalproject.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*

@@ -1,4 +1,4 @@
-package com.example.finalproject
+package com.example.finalproject.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.finalproject.ui.model.SongCard
 
 // TODO: Add NavController
 enum class LandingScreenStates() {
@@ -96,40 +97,6 @@ fun TopTen() {
                 .fillMaxWidth()
                 .height(54.dp)) {
                 SongCard(rank = i+1, title = "Song", artist = "Artist", liked = remember { mutableStateOf(true) } )
-            }
-        }
-    }
-}
-
-@Composable
-fun SongCard(rank: Int, title: String, artist: String, liked: MutableState<Boolean>) {
-    Card(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 4.dp),
-        shape = RoundedCornerShape(5.dp),
-        elevation = 4.dp
-    ) {
-        Row(modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
-            Column(modifier = Modifier.width(32.dp)) {
-                Text(rank.toString(), color = Color.Magenta)
-            }
-            Column(modifier = Modifier.width(120.dp)) {
-                Text(title, color = Color.Magenta)
-            }
-            Column(modifier = Modifier.width(120.dp)) {
-                Text(artist, color = Color.Magenta)
-            }
-            Column(modifier = Modifier.width(32.dp)) {
-                IconButton(onClick = { liked.value = !liked.value }) {
-                    Icon(
-                        imageVector = if (liked.value) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-                        contentDescription = "Like",
-                        tint = Color.Magenta
-                    )
-                }
             }
         }
     }
