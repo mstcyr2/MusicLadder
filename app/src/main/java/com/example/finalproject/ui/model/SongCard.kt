@@ -1,5 +1,6 @@
 package com.example.finalproject.ui.model
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -11,17 +12,23 @@ import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.finalproject.ui.data.Song
 
 @Composable
-fun SongCard(rank: Int, title: String, artist: String, liked: MutableState<Boolean>) {
+fun SongCard(song: Song) {
+    val opened = remember { mutableStateOf(false) }
+    SongDialog(song = song, opened = opened)
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 4.dp),
+            .padding(bottom = 4.dp)
+            .clickable(onClick = { opened.value = true }),
         shape = RoundedCornerShape(5.dp),
         elevation = 4.dp
     ) {
@@ -31,18 +38,18 @@ fun SongCard(rank: Int, title: String, artist: String, liked: MutableState<Boole
                 .padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.width(32.dp)) {
-                Text(rank.toString(), color = Color.Magenta)
+                Text(song.rank.toString(), color = Color.Magenta)
             }
             Column(modifier = Modifier.width(120.dp)) {
-                Text(title, color = Color.Magenta)
+                Text(song.title, color = Color.Magenta)
             }
             Column(modifier = Modifier.width(120.dp)) {
-                Text(artist, color = Color.Magenta)
+                Text(song.artist, color = Color.Magenta)
             }
             Column(modifier = Modifier.width(32.dp)) {
-                IconButton(onClick = { liked.value = !liked.value }) {
+                IconButton(onClick = { song.liked.value = !song.liked.value }) {
                     Icon(
-                        imageVector = if (liked.value) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+                        imageVector = if (song.liked.value) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
                         contentDescription = "Like",
                         tint = Color.Magenta
                     )

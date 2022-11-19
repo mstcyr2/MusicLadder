@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.model.SongCard
 
 // TODO: Add NavController
@@ -33,7 +34,7 @@ enum class LandingScreenStates() {
 fun LandingScreen() {
     Column (modifier = Modifier.padding(32.dp)){
         Greeting("User")
-        Playlist()
+        NavButtons()
         TopTen()
     }
 }
@@ -67,7 +68,7 @@ fun Greeting(name: String) {
 }
 
 @Composable
-fun Playlist() {
+fun NavButtons() {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
         Button(modifier = Modifier
             .size(width = 110.dp, height = 48.dp)
@@ -96,7 +97,7 @@ fun TopTen() {
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .height(54.dp)) {
-                SongCard(rank = i+1, title = "Song", artist = "Artist", liked = remember { mutableStateOf(true) } )
+                SongCard(Song(rank = i+1, title = "Song", artist = "Artist", liked = remember { mutableStateOf(true) }) )
             }
         }
     }

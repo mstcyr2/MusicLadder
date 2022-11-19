@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.model.SongCard
 
 @Composable
@@ -35,7 +36,7 @@ fun TopFifty(genre: String) {
                 Row(modifier = Modifier
                     .fillMaxWidth()
                     .height(54.dp)) {
-                    SongCard(rank = i+1, title = "Song", artist = "Artist", liked = remember { mutableStateOf(true) } )
+                    SongCard(Song(rank = i+1, title = "Song", artist = "Artist", liked = remember { mutableStateOf(true) }) )
                 }
             }
         }
