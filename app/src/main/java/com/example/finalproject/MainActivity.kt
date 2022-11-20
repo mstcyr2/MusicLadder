@@ -12,7 +12,9 @@ import com.example.finalproject.ui.BrowseScreen
 import com.example.finalproject.ui.CategoryScreen
 import com.example.finalproject.ui.Greeting
 import com.example.finalproject.ui.LandingScreen
+import com.example.finalproject.ui.data.MyPlaylists
 import com.example.finalproject.ui.theme.FinalProjectTheme
+import com.example.finalproject.ui.PlaylistScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,9 +30,7 @@ class MainActivity : ComponentActivity() {
                     // TODO: NavController functionality for browse top 50 cards
                     // For now, just swap boolean 'screen' val below
 
-                    val screenNumber = 1
-
-                    when (screenNumber) {
+                    when (4) {
                         1 -> {
                             LandingScreen()
                         }
@@ -41,6 +41,9 @@ class MainActivity : ComponentActivity() {
 
                         3 -> {
                             CategoryScreen("Top 50 Rock")
+                        }
+                        4 -> {
+                            PlaylistScreen(list = remember {mutableStateOf(MyPlaylists)})
                         }
                     }
                 }
