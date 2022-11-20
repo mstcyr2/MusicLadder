@@ -10,24 +10,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.model.SongCard
+import com.example.finalproject.ui.nav.Routes
 
+/**
+ * Initializes the Top 50 lists and interfaces
+ */
 @Composable
-fun CategoryScreen(genre: String) {
-    TopFifty(genre = genre)
+fun CategoryScreen(
+    navController: NavHostController,
+    genre: String
+) {
+    TopFifty(navController = navController, genre = genre)
 }
 
+/**
+ * Displays the top 50 list of the given genre, clickable cards
+ */
 @Composable
-fun TopFifty(genre: String) {
+fun TopFifty(navController: NavHostController, genre: String) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .padding(32.dp)) {
         Row(modifier = Modifier.padding(bottom = 32.dp)) {
-            Text(text = genre, fontSize = 32.sp)
+            Text(text = "$genre Top 50", fontSize = 32.sp)
         }
 
-        CategoryButtons()
+        CategoryButtons(navController = navController)
 
         LazyColumn(modifier = Modifier
             .fillMaxSize()
@@ -49,26 +60,26 @@ fun TopFifty(genre: String) {
  * Modified reused function from LandingScreen.kt to modify buttons for UI interfacing
  */
 @Composable
-fun CategoryButtons() {
+fun CategoryButtons(navController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 64.dp),
+            .padding(top = 62.dp),
         horizontalArrangement = Arrangement.Start
     ) {
         Button(modifier = Modifier
-            .size(width = 110.dp, height = 48.dp)
-            .padding(end = 8.dp), onClick = {},
+            .size(width = 150.dp, height = 48.dp)
+            .padding(end = 8.dp), onClick = { navController.navigate(Routes.Browse.route) },
             colors = ButtonDefaults.buttonColors(Color.Magenta)
         ) {
-            Text(text = "Home", color = Color.White)
+            Text(text = "<<< Go Back", color = Color.White)
         }
-        Button(modifier = Modifier
-            .size(width = 110.dp, height = 48.dp)
-            .padding(end = 4.dp), onClick = {},
-            colors = ButtonDefaults.buttonColors(Color.Magenta)
-        ) {
-            Text(text = "Browse", color = Color.White)
-        }
+//        Button(modifier = Modifier
+//            .size(width = 110.dp, height = 48.dp)
+//            .padding(end = 4.dp), onClick = { navController.navigate(Routes.Browse.route) },
+//            colors = ButtonDefaults.buttonColors(Color.Magenta)
+//        ) {
+//            Text(text = "Browse", color = Color.White)
+//        }
     }
 }

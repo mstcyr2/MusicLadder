@@ -1,6 +1,8 @@
 package com.example.finalproject.ui
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -20,8 +22,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.model.SongCard
+import com.example.finalproject.ui.nav.NavGraph
+import com.example.finalproject.ui.nav.Routes
 
 // TODO: Add NavController
 enum class LandingScreenStates() {
@@ -29,13 +35,14 @@ enum class LandingScreenStates() {
     Playlists
 }
 
-@Preview
 @Composable
-fun LandingScreen() {
-    Column (modifier = Modifier.padding(32.dp)){
-        Greeting("User")
-        NavButtons()
-        TopTen()
+fun LandingScreen(navController: NavHostController) {
+    Scaffold{
+        Column (modifier = Modifier.padding(32.dp)){
+            Greeting("User")
+            NavButtons(nav = navController)
+            TopTen()
+        }
     }
 }
 
@@ -68,18 +75,20 @@ fun Greeting(name: String) {
 }
 
 @Composable
-fun NavButtons() {
+fun NavButtons(
+    nav: NavHostController
+) {
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
         Button(modifier = Modifier
             .size(width = 110.dp, height = 48.dp)
-            .padding(end = 8.dp), onClick = {},
+            .padding(end = 8.dp), onClick = { nav.navigate(Routes.Browse.route) },
             colors = ButtonDefaults.buttonColors(Color.Magenta)
         ) {
             Text(text = "Browse", color = Color.White)
         }
         Button(modifier = Modifier
             .size(width = 110.dp, height = 48.dp)
-            .padding(end = 4.dp), onClick = {},
+            .padding(end = 4.dp), onClick = { nav.navigate(Routes.PlayList.route) },
             colors = ButtonDefaults.buttonColors(Color.Magenta)
         ) {
             Text(text = "Playlists", color = Color.White)

@@ -15,6 +15,7 @@ import com.example.finalproject.ui.LandingScreen
 import com.example.finalproject.ui.data.MyPlaylists
 import com.example.finalproject.ui.theme.FinalProjectTheme
 import com.example.finalproject.ui.PlaylistScreen
+import com.example.finalproject.ui.nav.NavGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,26 +27,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    // TODO: Add NavController for swapping between screens
-                    // TODO: NavController functionality for browse top 50 cards
-                    // For now, just swap boolean 'screen' val below
-
-                    when (4) {
-                        1 -> {
-                            LandingScreen()
-                        }
-
-                        2 -> {
-                            BrowseScreen()
-                        }
-
-                        3 -> {
-                            CategoryScreen("Top 50 Rock")
-                        }
-                        4 -> {
-                            PlaylistScreen(list = remember {mutableStateOf(MyPlaylists)})
-                        }
-                    }
+                    NavGraph()
                 }
             }
         }

@@ -16,13 +16,26 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.finalproject.ui.data.Playlist
+import com.example.finalproject.ui.nav.Routes
 import com.example.finalproject.ui.theme.Shapes
 
 @Composable
-fun PlaylistScreen(list: MutableState<List<Playlist>>) {
+fun PlaylistScreen(navController: NavHostController, list: MutableState<List<Playlist>>) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        Row(modifier = Modifier.fillMaxWidth(),
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 32.dp, top = 32.dp, bottom = 8.dp)
+        ) {
+            Text("My Playlists", fontSize = 32.sp)
+        }
+
+        ButtonsBrowse(navController)
+
+        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
         ){
             TextField(value = "Search...",
                 onValueChange = {},
@@ -52,6 +65,34 @@ fun PlaylistScreen(list: MutableState<List<Playlist>>) {
                 }
 
             }
+        }
+    }
+}
+
+/**
+ * Modified reused function from LandingScreen.kt to modify buttons for UI interfacing
+ */
+@Composable
+fun ButtonsBrowse(navController: NavHostController) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 32.dp, top = 11.dp),
+        horizontalArrangement = Arrangement.Start
+    ) {
+        Button(modifier = Modifier
+            .size(width = 110.dp, height = 48.dp)
+            .padding(end = 8.dp), onClick = { navController.navigate(Routes.Landing.route) },
+            colors = ButtonDefaults.buttonColors(Color.Magenta)
+        ) {
+            Text(text = "Home", color = Color.White)
+        }
+        Button(modifier = Modifier
+            .size(width = 110.dp, height = 48.dp)
+            .padding(end = 4.dp), onClick = { navController.navigate(Routes.Browse.route) },
+            colors = ButtonDefaults.buttonColors(Color.Magenta)
+        ) {
+            Text(text = "Browse", color = Color.White)
         }
     }
 }
