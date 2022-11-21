@@ -38,6 +38,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     FinalProjectTheme {
-        Greeting("Android")
+        Greeting("Android", rememberCoroutineScope(), rememberScaffoldState())
     }
 }

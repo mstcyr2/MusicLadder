@@ -9,16 +9,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Person
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,6 +29,8 @@ import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.model.SongCard
 import com.example.finalproject.ui.nav.NavGraph
 import com.example.finalproject.ui.nav.Routes
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 // TODO: Add NavController
 enum class LandingScreenStates() {
@@ -37,9 +40,18 @@ enum class LandingScreenStates() {
 
 @Composable
 fun LandingScreen(navController: NavHostController) {
-    Scaffold{
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+    Scaffold(
+        drawerContent = {
+            Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(30.dp).fillMaxWidth()) {
+                Text(text = "Sign In", fontSize = 32.sp, textDecoration = TextDecoration.Underline)
+            }
+        },
+        scaffoldState = scaffoldState
+    ){
         Column (modifier = Modifier.padding(32.dp)){
-            Greeting("User")
+            Greeting("User", scope, scaffoldState)
             NavButtons(nav = navController)
             TopTen()
         }
@@ -47,7 +59,7 @@ fun LandingScreen(navController: NavHostController) {
 }
 
 @Composable
-fun Greeting(name: String) {
+fun Greeting(name: String, scope: CoroutineScope, state: ScaffoldState) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(bottom = 8.dp)) {
@@ -56,14 +68,14 @@ fun Greeting(name: String) {
         }
         Column (modifier = Modifier.size(width = 54.dp, height = 54.dp),
             horizontalAlignment = Alignment.CenterHorizontally){
-            OutlinedButton(
-                onClick = { /*TODO*/ },
+            IconButton(
+                onClick = {scope.launch {
+                    state.drawerState.open()
+                }},
                 modifier = Modifier.size(48.dp),
-                shape = CircleShape,
-                border = BorderStroke(3.dp, color = Color.Magenta)
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.Person,
+                    imageVector = Icons.Outlined.AccountCircle,
                     contentDescription = "Profile",
                     modifier = Modifier.fillMaxSize(),
                     tint = Color.Magenta
