@@ -21,9 +21,9 @@ import androidx.compose.ui.unit.dp
 import com.example.finalproject.ui.data.Song
 
 @Composable
-fun SongCard(song: Song) {
+fun SongCard(song: Song, spotify_link: String) {
     val opened = remember { mutableStateOf(false) }
-    SongDialog(song = song, opened = opened)
+    SongDialog(song = song, opened = opened, spotify_link = spotify_link)
     Card(
         modifier = Modifier
             .fillMaxSize()

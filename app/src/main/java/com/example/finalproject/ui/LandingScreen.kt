@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -62,7 +63,7 @@ fun LandingScreen(navController: NavHostController) {
             TopTen()
 
             // Fake database call for now
-            DatabaseConnection()
+            // DatabaseConnection()
         }
     }
 }
@@ -74,13 +75,32 @@ fun DatabaseConnection() {
     dbHandler.createMainTable()
 
     dbHandler.addNewSong(
-        "genre_rock",
-        "artist",
-        "genre",
-        "",
+        "rap_1",
+        "Superhero (Heroes & Villains)",
+        "Metro Boomin, Future, Chris Brown",
+        "rap",
         1,
-        "http://test.com"
+        "https://open.spotify.com/track/0vjeOZ3Ft5jvAi9SBFJm1j?si=fe0ac0217f0d4225"
     )
+
+    dbHandler.addNewSong(
+        "rap_2",
+        "Rich Flex",
+        "Drake, 21 Savage",
+        "rap",
+        1,
+        "https://open.spotify.com/track/1bDbXMyjaUIooNwFE9wn0N?si=0028bba9598b4128"
+    )
+
+    dbHandler.addNewSong(
+        "rap_3",
+        "To The Bone",
+        "Quavo, Takeoff, YoungBoy",
+        "rap",
+        1,
+        "https://open.spotify.com/track/4wRJHXHDJnKSPr9IVn0BFR?si=6c882032eae642ad"
+    )
+
 
     Log.d("MusicLadder", "Added something to the database")
 
@@ -148,15 +168,27 @@ fun NavButtons(
 
 @Composable
 fun TopTen() {
+    val dbHandler = DatabaseHandler(LocalContext.current)
+    val songs: List<SongModel>
+
+    songs = dbHandler.readSongs()
+
+    // TODO: Have the sort first for top 10
+
     Row(modifier = Modifier.padding(top = 32.dp, bottom = 32.dp)) {
         Text(text = "Top 10", fontSize = 54.sp)
     }
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(10) { i : Int ->
+        itemsIndexed(songs) { i, song ->
             Row(modifier = Modifier
                 .fillMaxWidth()
                 .height(54.dp)) {
-                SongCard(Song(rank = i+1, title = "Song", artist = "Artist", liked = remember { mutableStateOf(true) }) )
+                SongCard(Song(
+                    rank = i+1,
+                    title = song.song_name,
+                    artist = song.artist_name,
+                    liked = remember { mutableStateOf(true) }),
+                    spotify_link = song.spotify_link)
             }
         }
     }

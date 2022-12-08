@@ -2,15 +2,19 @@ package com.example.finalproject.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.finalproject.database.DatabaseHandler
+import com.example.finalproject.database.SongModel
 import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.model.SongCard
 import com.example.finalproject.ui.nav.Routes
@@ -31,6 +35,11 @@ fun CategoryScreen(
  */
 @Composable
 fun TopFifty(navController: NavHostController, genre: String) {
+    val dbHandler = DatabaseHandler(LocalContext.current)
+    val songs: List<SongModel>
+
+    songs = dbHandler.readSongs()
+
     Box(modifier = Modifier
         .fillMaxWidth()
         .padding(32.dp)) {
@@ -43,11 +52,16 @@ fun TopFifty(navController: NavHostController, genre: String) {
         LazyColumn(modifier = Modifier
             .fillMaxSize()
             .padding(top = 150.dp)) {
-            items(50) { i : Int ->
+            itemsIndexed(songs) { i, song ->
                 Row(modifier = Modifier
                     .fillMaxWidth()
                     .height(54.dp)) {
-                    SongCard(Song(rank = i+1, title = "Song", artist = "Artist", liked = remember { mutableStateOf(true) }) )
+                    SongCard(Song(
+                        rank = i+1,
+                        title = song.song_name,
+                        artist = song.artist_name,
+                        liked = remember { mutableStateOf(true) }),
+                        spotify_link = song.spotify_link)
                 }
             }
         }
