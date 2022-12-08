@@ -58,9 +58,7 @@ fun BrowseScreen(navController : NavHostController) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoryOrganization(navController: NavHostController) {
-    val categoryNames = listOf("Rock", "Hip Hop", "Pop", "Jazz", "Country", "Blues", "Metal",
-        "Electronic", "Classical", "Punk", "Soul", "Alternative", "Folk", "Latin", "Funk", "Reggae",
-        "Techno", "Indie", "House", "Disco", "Instrumental", "New Wave")
+    val categoryNames = listOf("Rap", "Pop")
 
     LazyVerticalGrid(
         modifier = Modifier.padding(top = 144.dp),

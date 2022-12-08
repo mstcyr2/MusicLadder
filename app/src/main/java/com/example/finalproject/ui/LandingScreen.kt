@@ -19,12 +19,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.finalproject.database.DatabaseHandler
+import com.example.finalproject.database.SongModel
 import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.model.SongCard
 import com.example.finalproject.ui.nav.NavGraph
@@ -42,9 +45,12 @@ enum class LandingScreenStates() {
 fun LandingScreen(navController: NavHostController) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
+
     Scaffold(
         drawerContent = {
-            Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.padding(30.dp).fillMaxWidth()) {
+            Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
+                .padding(30.dp)
+                .fillMaxWidth()) {
                 Text(text = "Sign In", fontSize = 32.sp, textDecoration = TextDecoration.Underline)
             }
         },
@@ -54,7 +60,39 @@ fun LandingScreen(navController: NavHostController) {
             Greeting("User", scope, scaffoldState)
             NavButtons(nav = navController)
             TopTen()
+
+            // Fake database call for now
+            DatabaseConnection()
         }
+    }
+}
+
+@Composable
+fun DatabaseConnection() {
+    val dbHandler = DatabaseHandler(LocalContext.current)
+
+    dbHandler.createMainTable()
+
+    dbHandler.addNewSong(
+        "genre_rock",
+        "artist",
+        "genre",
+        "",
+        1,
+        "http://test.com"
+    )
+
+    Log.d("MusicLadder", "Added something to the database")
+
+    val songs: List<SongModel>
+
+    songs = dbHandler.readSongs()
+
+    for (i in songs) {
+        Log.d("MusicLadder",
+            i.song_id + " " + i.song_name + " " + i.artist_name + " "
+                    + i.category + " " + i.likes + " " + i.spotify_link
+        )
     }
 }
 
