@@ -7,26 +7,25 @@ import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.finalproject.ui.nav.Routes
-import com.example.finalproject.ui.theme.FinalProjectTheme
+import com.example.finalproject.ui.viewmodel.SongViewModel
 
 /**
  * Main function for launching browsing page
  */
 @Composable
-fun BrowseScreen(navController : NavHostController) {
+fun BrowseScreen(
+    navController : NavHostController,
+    vm: SongViewModel
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,7 +45,8 @@ fun BrowseScreen(navController : NavHostController) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .padding(32.dp)) {
-        CategoryOrganization(navController = navController)
+        CategoryOrganization(navController = navController, vm = vm)
+
     }
 }
 
@@ -57,8 +57,11 @@ fun BrowseScreen(navController : NavHostController) {
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CategoryOrganization(navController: NavHostController) {
-    val categoryNames = listOf("Rap", "Pop")
+fun CategoryOrganization(
+    navController: NavHostController,
+    vm: SongViewModel
+) {
+    val categoryNames = listOf("Rap", "Pop") // TODO Add more categories
 
     LazyVerticalGrid(
         modifier = Modifier.padding(top = 144.dp),
@@ -70,7 +73,7 @@ fun CategoryOrganization(navController: NavHostController) {
                     modifier = Modifier.padding(end = 8.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    BrowseCard(navController = navController, icon = "ICON", category = categoryNames[index])
+                    BrowseCard(navController = navController, icon = "ICON", category = categoryNames[index], vm = vm)
                 }
             }
         })
@@ -83,7 +86,8 @@ fun CategoryOrganization(navController: NavHostController) {
 fun BrowseCard(
     navController: NavHostController,
     icon: String,
-    category: String
+    category: String,
+    vm: SongViewModel
 ) {
     val configuration = LocalConfiguration.current
     var cardWidth = configuration.screenWidthDp.dp
@@ -94,7 +98,10 @@ fun BrowseCard(
         modifier = Modifier
             .height(100.dp)
             .padding(bottom = 16.dp)
-            .clickable { navController.navigate(Routes.Category.route) },
+            .clickable {
+                vm.setSelectedCategory(category = category.lowercase())
+                navController.navigate(Routes.Category.route)
+                       },
         shape = RoundedCornerShape(5.dp),
         elevation = 4.dp
     ) {

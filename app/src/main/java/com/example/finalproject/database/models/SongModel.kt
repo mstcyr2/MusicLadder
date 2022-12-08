@@ -1,4 +1,4 @@
-package com.example.finalproject.database
+package com.example.finalproject.database.models
 
 data class SongModel(
     var song_id: String,

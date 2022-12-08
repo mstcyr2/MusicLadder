@@ -1,5 +1,6 @@
 package com.example.finalproject.ui.model
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,11 +18,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.finalproject.database.DatabaseHandler
+import com.example.finalproject.database.models.SongModel
 import com.example.finalproject.ui.data.Song
+import com.example.finalproject.ui.viewmodel.SongViewModel
 
 @Composable
-fun SongCard(song: Song, spotify_link: String) {
+fun SongCard(
+    song: Song,
+    spotify_link: String,
+    songObject: SongModel,
+    vm: SongViewModel
+) {
+    val dbHandler = DatabaseHandler(LocalContext.current)
     val opened = remember { mutableStateOf(false) }
     SongDialog(song = song, opened = opened, spotify_link = spotify_link)
     Card(
@@ -47,7 +58,15 @@ fun SongCard(song: Song, spotify_link: String) {
                 Text(song.artist, color = Color.Magenta)
             }
             Column(modifier = Modifier.width(32.dp)) {
-                IconButton(onClick = { song.liked.value = !song.liked.value }) {
+                IconButton(onClick =
+                {
+                    song.liked.value = !song.liked.value // The value will always change
+                    if (song.liked.value) {
+                        dbHandler.likeSong(user_id = vm.getCurrentUserId(), song = songObject)
+                    } else {
+                        dbHandler.unlikeSong(user_id = vm.getCurrentUserId(), song = songObject)
+                    }
+                }) {
                     Icon(
                         imageVector = if (song.liked.value) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
                         contentDescription = "Like",

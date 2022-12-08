@@ -14,10 +14,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.finalproject.database.DatabaseHandler
-import com.example.finalproject.database.SongModel
+import com.example.finalproject.database.models.SongModel
 import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.model.SongCard
 import com.example.finalproject.ui.nav.Routes
+import com.example.finalproject.ui.viewmodel.SongViewModel
 
 /**
  * Initializes the Top 50 lists and interfaces
@@ -25,26 +26,33 @@ import com.example.finalproject.ui.nav.Routes
 @Composable
 fun CategoryScreen(
     navController: NavHostController,
-    genre: String
+    genre: String,
+    vm: SongViewModel
 ) {
-    TopFifty(navController = navController, genre = genre)
+    TopFifty(navController = navController, genre = genre, vm = vm)
 }
 
 /**
  * Displays the top 50 list of the given genre, clickable cards
  */
 @Composable
-fun TopFifty(navController: NavHostController, genre: String) {
+fun TopFifty(
+    navController: NavHostController,
+    genre: String,
+    vm: SongViewModel
+) {
     val dbHandler = DatabaseHandler(LocalContext.current)
     val songs: List<SongModel>
+    val likedSongs: List<String>
 
-    songs = dbHandler.readSongs()
+    songs = dbHandler.getOrderedByGenre(genre)
+    likedSongs = dbHandler.getLikedSongs(vm.getCurrentUserId())
 
     Box(modifier = Modifier
         .fillMaxWidth()
         .padding(32.dp)) {
         Row(modifier = Modifier.padding(bottom = 32.dp)) {
-            Text(text = "$genre Top 50", fontSize = 32.sp)
+            Text(text = "${genre.capitalize()} Top 50", fontSize = 32.sp)
         }
 
         CategoryButtons(navController = navController)
@@ -60,8 +68,10 @@ fun TopFifty(navController: NavHostController, genre: String) {
                         rank = i+1,
                         title = song.song_name,
                         artist = song.artist_name,
-                        liked = remember { mutableStateOf(true) }),
-                        spotify_link = song.spotify_link)
+                        liked = remember { mutableStateOf(likedSongs.contains(song.song_id)) }),
+                        spotify_link = song.spotify_link,
+                        songObject = song,
+                        vm = vm)
                 }
             }
         }

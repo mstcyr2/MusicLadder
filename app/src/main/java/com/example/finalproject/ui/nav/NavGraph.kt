@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,6 +15,7 @@ import com.example.finalproject.ui.CategoryScreen
 import com.example.finalproject.ui.LandingScreen
 import com.example.finalproject.ui.PlaylistScreen
 import com.example.finalproject.ui.data.MyPlaylists
+import com.example.finalproject.ui.viewmodel.SongViewModel
 
 /**
  * Navigation
@@ -23,25 +25,26 @@ import com.example.finalproject.ui.data.MyPlaylists
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
+    val vm: SongViewModel = viewModel()
 
     NavHost(
         navController = navController,
         startDestination = Routes.Landing.route
     ) {
         composable(Routes.Landing.route) {
-            LandingScreen(navController = navController)
+            LandingScreen(navController = navController, vm = vm)
 
             Log.d("App", "Navigated to the landing page")
         }
 
         composable(Routes.Browse.route) {
-            BrowseScreen(navController = navController)
+            BrowseScreen(navController = navController, vm = vm)
 
             Log.d("App", "Navigated to the browse page")
         }
 
         composable(Routes.Category.route) {
-            CategoryScreen(navController = navController, genre = "Rock")
+            CategoryScreen(navController = navController, genre = vm.getSelectedCategory(), vm = vm)
 
             Log.d("App", "Navigated to the category page")
         }
