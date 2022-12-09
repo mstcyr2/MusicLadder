@@ -1,5 +1,6 @@
 package com.example.finalproject.ui.model
 
+import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -10,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
@@ -19,6 +21,9 @@ import com.example.finalproject.ui.data.Song
 
 @Composable
 fun SongDialog(song: Song, opened: MutableState<Boolean>, spotify_link: String) {
+    val context = LocalContext.current
+    val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(spotify_link)) }
+
     if (opened.value) {
         AlertDialog(
             onDismissRequest = { opened.value = false },
@@ -34,7 +39,7 @@ fun SongDialog(song: Song, opened: MutableState<Boolean>, spotify_link: String) 
                 ) {
                     Button(
                         onClick = {
-                            // startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(spotify_link)))
+                            context.startActivity(intent)
                         },
                         colors = ButtonDefaults.buttonColors(Color.White),
                         modifier = Modifier.size(80.dp, 40.dp)

@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.finalproject.database.DatabaseHandler
 import com.example.finalproject.database.models.SongModel
@@ -52,10 +53,10 @@ fun SongCard(
                 Text(song.rank.toString(), color = Color.Magenta)
             }
             Column(modifier = Modifier.width(120.dp)) {
-                Text(song.title, color = Color.Magenta)
+                Text(song.title, color = Color.Magenta, maxLines = 2, overflow = TextOverflow.Ellipsis)
             }
             Column(modifier = Modifier.width(120.dp)) {
-                Text(song.artist, color = Color.Magenta)
+                Text(song.artist, color = Color.Magenta, maxLines = 2, overflow = TextOverflow.Ellipsis)
             }
             Column(modifier = Modifier.width(32.dp)) {
                 IconButton(onClick =
