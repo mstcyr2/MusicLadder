@@ -1,7 +1,6 @@
 package com.example.finalproject.ui
 
 import android.database.sqlite.SQLiteException
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -17,16 +16,15 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.finalproject.assets.DatabaseConnection
 import com.example.finalproject.database.DatabaseHandler
-import com.example.finalproject.database.models.LikedSongsModel
 import com.example.finalproject.database.models.SongModel
 import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.model.SongCard
 import com.example.finalproject.ui.nav.Routes
-import com.example.finalproject.ui.viewmodel.SongViewModel
+import com.example.finalproject.ui.viewmodel.AppViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 // TODO: Add NavController
 enum class LandingScreenStates() {
@@ -37,7 +35,7 @@ enum class LandingScreenStates() {
 @Composable
 fun LandingScreen(
     navController: NavHostController,
-    vm: SongViewModel
+    vm: AppViewModel
 ) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -63,8 +61,8 @@ fun LandingScreen(
     }
 }
 
-@Composable
-fun DatabaseConnection(vm: SongViewModel) {
+//@Composable
+/* fun DatabaseConnection(vm: AppViewModel) {
     val dbHandler = DatabaseHandler(LocalContext.current)
 
     dbHandler.createMainTables() // TODO: REMOVE THIS AFTER DEBUG
@@ -264,7 +262,7 @@ fun DatabaseConnection(vm: SongViewModel) {
     }
 
     vm.setCurrentUserId("user_1") // TODO MOST IMPORTANT FOR WHEN SOMEONE LOGS IN
-}
+} */
 
 @Composable
 fun Greeting(name: String, scope: CoroutineScope, state: ScaffoldState) {
@@ -317,13 +315,13 @@ fun NavButtons(
 }
 
 @Composable
-fun TopTen(vm : SongViewModel) {
+fun TopTen(vm : AppViewModel) {
     val dbHandler = DatabaseHandler(LocalContext.current)
     val songs: List<SongModel>
     val likedSongs: List<String>
 
     songs = dbHandler.getOrderedByLikes()
-    likedSongs = dbHandler.getLikedSongs(vm.getCurrentUserId())
+    likedSongs = dbHandler.getLikedSongs(vm.currentUser.value)
 
     val displaySongs: ArrayList<SongModel> = ArrayList()
 

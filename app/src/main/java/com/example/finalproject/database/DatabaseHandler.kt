@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.database.getStringOrNull
 import com.example.finalproject.database.models.LikedSongsModel
 import com.example.finalproject.database.models.SongModel
 
@@ -40,6 +41,10 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
         private const val ID_COL_LIKED_SONGS = "id"
         private const val USER_ID_COL = "user_id"
         private const val LIKED_SONG_COL = "liked_song"
+
+        // Count for auto IDs
+        private var SONG_COUNT = 0
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -119,7 +124,6 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
     }
 
     fun addNewSong(
-        song_id: String?,
         song_name: String?,
         artist_name: String?,
         category: String?,
@@ -129,7 +133,7 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
         val db = this.writableDatabase
         val values = ContentValues()
 
-        values.put(ID_COL, song_id)
+        values.put(ID_COL, category + "_" + SONG_COUNT)
         values.put(NAME_COL, song_name)
         values.put(ARTIST_COL, artist_name)
         values.put(CATEGORY_COL, category)
@@ -137,23 +141,26 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
         values.put(SPOTIFY_COL, spotify_link)
 
         db.insertOrThrow(SONGS_TABLE_NAME, null, values)
+        SONG_COUNT += 1
         db.close()
     }
 
     fun addNewUser(
-        user_id: String?,
         username: String?,
         password: String?
-    ) {
+    ) : String {
         val db = this.writableDatabase
         val values = ContentValues()
+        val userID = getRandomString(10)
 
-        values.put(ID_COL_USER, user_id)
+        values.put(ID_COL_USER, userID)
         values.put(USERNAME_COL_USER, username)
         values.put(PASSWORD_COL_USER, password)
 
         db.insertOrThrow(USERS_TABLE_NAME, null, values)
         db.close()
+
+        return userID
     }
 
     private fun getRandomString(length: Int) : String {
@@ -277,6 +284,24 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
 //
 //        db.delete(SONGS_TABLE_NAME, null, null);
 //    }
+
+    fun findUser(username: String, password: String) : String? {
+        val db = this.readableDatabase
+        val cursor : Cursor = db.rawQuery(
+            "SELECT $ID_COL_USER FROM $USERS_TABLE_NAME " +
+                "WHERE $USERNAME_COL_USER=:username " +
+                "AND $PASSWORD_COL_USER=:password" ,
+            null)
+        var result : String? = null
+        if (cursor.moveToFirst()) {
+            if (cursor.getStringOrNull(0) == null) {
+                result = null
+            }else {
+                result = cursor.getString(0)
+            }
+        }
+        return result
+    }
 
     override suspend fun readSongs(): ArrayList<SongModel> {
         val db = this.readableDatabase

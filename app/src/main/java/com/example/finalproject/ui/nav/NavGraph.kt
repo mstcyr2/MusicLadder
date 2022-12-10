@@ -1,21 +1,20 @@
 package com.example.finalproject.ui.nav
 
 import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.finalproject.ui.BrowseScreen
-import com.example.finalproject.ui.CategoryScreen
-import com.example.finalproject.ui.LandingScreen
-import com.example.finalproject.ui.PlaylistScreen
+import com.example.finalproject.ui.*
 import com.example.finalproject.ui.data.MyPlaylists
-import com.example.finalproject.ui.viewmodel.SongViewModel
+import com.example.finalproject.ui.viewmodel.AppViewModel
 
 /**
  * Navigation
@@ -25,11 +24,11 @@ import com.example.finalproject.ui.viewmodel.SongViewModel
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
-    val vm: SongViewModel = viewModel()
+    val vm: AppViewModel = viewModel()
 
     NavHost(
         navController = navController,
-        startDestination = Routes.Landing.route
+        startDestination = Routes.SignUp.route
     ) {
         composable(Routes.Landing.route) {
             LandingScreen(navController = navController, vm = vm)
@@ -56,6 +55,11 @@ fun NavGraph() {
             )
 
             Log.d("App", "Navigated to the playlist page")
+        }
+        composable(Routes.SignUp.route) {
+            Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
+                SignUpScreen(navController = navController, vm)
+            }
         }
     }
 

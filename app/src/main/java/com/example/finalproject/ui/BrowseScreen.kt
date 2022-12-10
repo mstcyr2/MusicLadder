@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.finalproject.ui.nav.Routes
-import com.example.finalproject.ui.viewmodel.SongViewModel
+import com.example.finalproject.ui.viewmodel.AppViewModel
 
 /**
  * Main function for launching browsing page
@@ -24,7 +24,7 @@ import com.example.finalproject.ui.viewmodel.SongViewModel
 @Composable
 fun BrowseScreen(
     navController : NavHostController,
-    vm: SongViewModel
+    vm: AppViewModel
 ) {
     Row(
         modifier = Modifier
@@ -59,7 +59,7 @@ fun BrowseScreen(
 @Composable
 fun CategoryOrganization(
     navController: NavHostController,
-    vm: SongViewModel
+    vm: AppViewModel
 ) {
     val categoryNames = listOf("Rap", "Pop") // TODO Add more categories
 
@@ -87,7 +87,7 @@ fun BrowseCard(
     navController: NavHostController,
     icon: String,
     category: String,
-    vm: SongViewModel
+    vm: AppViewModel
 ) {
     val configuration = LocalConfiguration.current
     var cardWidth = configuration.screenWidthDp.dp

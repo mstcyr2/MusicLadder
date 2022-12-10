@@ -18,7 +18,7 @@ import com.example.finalproject.database.models.SongModel
 import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.model.SongCard
 import com.example.finalproject.ui.nav.Routes
-import com.example.finalproject.ui.viewmodel.SongViewModel
+import com.example.finalproject.ui.viewmodel.AppViewModel
 
 /**
  * Initializes the Top 50 lists and interfaces
@@ -27,7 +27,7 @@ import com.example.finalproject.ui.viewmodel.SongViewModel
 fun CategoryScreen(
     navController: NavHostController,
     genre: String,
-    vm: SongViewModel
+    vm: AppViewModel
 ) {
     TopFifty(navController = navController, genre = genre, vm = vm)
 }
@@ -39,14 +39,14 @@ fun CategoryScreen(
 fun TopFifty(
     navController: NavHostController,
     genre: String,
-    vm: SongViewModel
+    vm: AppViewModel
 ) {
     val dbHandler = DatabaseHandler(LocalContext.current)
     val songs: List<SongModel>
     val likedSongs: List<String>
 
     songs = dbHandler.getOrderedByGenre(genre)
-    likedSongs = dbHandler.getLikedSongs(vm.getCurrentUserId())
+    likedSongs = dbHandler.getLikedSongs(vm.currentUser.value)
 
     Box(modifier = Modifier
         .fillMaxWidth()

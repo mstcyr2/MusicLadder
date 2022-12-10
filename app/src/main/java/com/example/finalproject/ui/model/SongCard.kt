@@ -1,6 +1,5 @@
 package com.example.finalproject.ui.model
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,14 +22,14 @@ import androidx.compose.ui.unit.dp
 import com.example.finalproject.database.DatabaseHandler
 import com.example.finalproject.database.models.SongModel
 import com.example.finalproject.ui.data.Song
-import com.example.finalproject.ui.viewmodel.SongViewModel
+import com.example.finalproject.ui.viewmodel.AppViewModel
 
 @Composable
 fun SongCard(
     song: Song,
     spotify_link: String,
     songObject: SongModel,
-    vm: SongViewModel
+    vm: AppViewModel
 ) {
     val dbHandler = DatabaseHandler(LocalContext.current)
     val opened = remember { mutableStateOf(false) }
@@ -63,9 +61,9 @@ fun SongCard(
                 {
                     song.liked.value = !song.liked.value // The value will always change
                     if (song.liked.value) {
-                        dbHandler.likeSong(user_id = vm.getCurrentUserId(), song = songObject)
+                        dbHandler.likeSong(user_id = vm.currentUser.value, song = songObject)
                     } else {
-                        dbHandler.unlikeSong(user_id = vm.getCurrentUserId(), song = songObject)
+                        dbHandler.unlikeSong(user_id = vm.currentUser.value, song = songObject)
                     }
                 }) {
                     Icon(

@@ -8,13 +8,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.finalproject.ui.BrowseScreen
-import com.example.finalproject.ui.CategoryScreen
-import com.example.finalproject.ui.Greeting
-import com.example.finalproject.ui.LandingScreen
-import com.example.finalproject.ui.data.MyPlaylists
+import com.example.finalproject.ui.*
 import com.example.finalproject.ui.theme.FinalProjectTheme
-import com.example.finalproject.ui.PlaylistScreen
 import com.example.finalproject.ui.nav.NavGraph
 
 class MainActivity : ComponentActivity() {
@@ -28,6 +23,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     NavGraph()
+                    //SignUpScreen()
                 }
             }
         }
