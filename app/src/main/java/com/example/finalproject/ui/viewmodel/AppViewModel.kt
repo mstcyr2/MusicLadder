@@ -1,6 +1,8 @@
 package com.example.finalproject.ui.viewmodel
 
 import android.app.Application
+import android.database.sqlite.SQLiteException
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
@@ -39,14 +41,14 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
     }
 
     fun onSignUp(user : String, pass : String) : Boolean {
-        val userCheck = _repository.getUser(user, pass)
-        return if (userCheck == null) {
+        try {
             _currentUser.value = _repository.addUser(user, pass)
-            true
-        } else {
-            false
+            Log.d("Try Sign Up: ", "User added successfully")
+            return true
+        } catch (e : SQLiteException) {
+            Log.d("Try Sign Up: ", "User already exists")
+            return false
         }
-
     }
 
     fun onLogIn(user : String, pass : String) {

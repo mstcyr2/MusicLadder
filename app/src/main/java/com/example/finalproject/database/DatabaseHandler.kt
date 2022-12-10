@@ -292,15 +292,9 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
                 "WHERE $USERNAME_COL_USER=:username " +
                 "AND $PASSWORD_COL_USER=:password" ,
             null)
-        var result : String? = null
-        if (cursor.moveToFirst()) {
-            if (cursor.getStringOrNull(0) == null) {
-                result = null
-            }else {
-                result = cursor.getString(0)
-            }
-        }
-        return result
+        if (cursor.moveToFirst())
+            return cursor.getStringOrNull(0)
+        return null
     }
 
     override suspend fun readSongs(): ArrayList<SongModel> {
