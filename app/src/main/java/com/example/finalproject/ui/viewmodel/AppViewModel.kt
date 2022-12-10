@@ -13,6 +13,8 @@ import com.example.finalproject.database.models.SongModel
 import com.example.finalproject.database.repo.AppRepository
 import com.example.finalproject.database.repo.IRepository
 import kotlinx.coroutines.launch
+import java.lang.IllegalArgumentException
+import java.lang.NullPointerException
 
 class AppViewModel(app : Application) : AndroidViewModel(app) {
 
@@ -51,8 +53,13 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
         }
     }
 
-    fun onLogIn(user : String, pass : String) {
-
+    fun onLogIn(user : String, pass : String) : Boolean {
+        try {
+            _currentUser.value = _repository.getUser(user, pass)!!
+            return true
+        } catch (e : NullPointerException) {
+            return false
+        }
     }
 
     fun onLikeSong(user_id : String, song : SongModel) {

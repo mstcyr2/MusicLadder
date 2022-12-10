@@ -61,6 +61,12 @@ fun NavGraph() {
                 SignUpScreen(navController = navController, vm)
             }
         }
+        composable(Routes.LogIn.route) {
+            Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
+                LogInScreen(navController = navController, vm)
+            }
+        }
+
     }
 
 }

@@ -1,28 +1,23 @@
 package com.example.finalproject.ui
 
-import android.os.Message
+import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.rounded.Face
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.*
-import androidx.core.app.NotificationCompat
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.finalproject.R
 import com.example.finalproject.ui.nav.Routes
@@ -36,7 +31,7 @@ fun SignUpScreen(
     val username = remember { mutableStateOf( "" ) }
     val password = remember { mutableStateOf("") }
     val verifier = remember { mutableStateOf("") }
-    val exists = remember { mutableStateOf(false) }
+    val ctx = LocalContext.current
     
     Column(modifier = Modifier
         .fillMaxWidth()
@@ -92,21 +87,18 @@ fun SignUpScreen(
                 if (isNew) {
                     navController.navigate(Routes.Landing.route)
                 } else {
-                    exists.value = true
+                    Toast.makeText(ctx, "Oops! That account already exists.", Toast.LENGTH_LONG).show()
                 }
+            } else {
+                Toast.makeText(ctx, "Passwords do not match! Try again.", Toast.LENGTH_LONG).show()
             }
         }
         ) {
             Text("Sign Up!")
         }
-        if (exists.value) {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Icon(imageVector = Icons.Filled.Warning, contentDescription = "warning")
-                Text(text = "Oops! That account already exists.")
-            }
-        } else {
-            Text(text = "")
-        }
+        Text(text = "Already have an account? Log In here!", modifier = Modifier.clickable {
+            navController.navigate(Routes.LogIn.route)
+        })
 
     }
 }

@@ -289,8 +289,8 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
         val db = this.readableDatabase
         val cursor : Cursor = db.rawQuery(
             "SELECT $ID_COL_USER FROM $USERS_TABLE_NAME " +
-                "WHERE $USERNAME_COL_USER=:username " +
-                "AND $PASSWORD_COL_USER=:password" ,
+                "WHERE $USERNAME_COL_USER='$username' " +
+                "AND $PASSWORD_COL_USER='$password'" ,
             null)
         if (cursor.moveToFirst())
             return cursor.getStringOrNull(0)
