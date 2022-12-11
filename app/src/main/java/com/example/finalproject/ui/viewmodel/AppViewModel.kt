@@ -72,8 +72,12 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
             val notif = createNotification(likesInTT.value)
             NotificationManagerCompat.from(getApplication<Application>().applicationContext)
                 .notify(likesInTT.hashCode(), notif)
-        } else
+        } else {
             _currentUser.value = user_id
+            _likedSongs.value = ArrayList()
+        }
+
+
     }
 
     fun setSelectedCategory(category: String) {

@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavHostController
 import com.example.finalproject.R
@@ -62,6 +64,7 @@ fun LogInScreen(
             placeholder = {
                 Text(text = "Password")
             },
+            visualTransformation = PasswordVisualTransformation(),
             trailingIcon = {
                 IconToggleButton(checked = false, onCheckedChange = {}) {
                     Icon(imageVector = Icons.Filled.Info, contentDescription = "Toggle Show Password")

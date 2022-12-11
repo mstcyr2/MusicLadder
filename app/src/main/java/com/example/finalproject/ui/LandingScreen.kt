@@ -69,7 +69,8 @@ fun LandingScreen(
             list.add(song)
         }
     }
-
+    
+    
 
     //DatabaseConnection(vm = vm)
 
@@ -86,11 +87,20 @@ fun LandingScreen(
                     )
                 }
             } else {
+                Text(
+                    text = "Log Out",
+                    fontSize = 24.sp,
+                    modifier = Modifier.clickable {
+                        vm.onLogOut()
+                        navController.navigate(Routes.Landing.route)
+                    })
                 Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         imageVector = Icons.Filled.AccountCircle,
                         contentDescription = "profile",
-                        modifier = Modifier.size(200.dp).clickable {  },
+                        modifier = Modifier
+                            .size(200.dp)
+                            .clickable { },
                         tint = Color.LightGray
                     )
                     Text(name.value, fontSize = 32.sp)
