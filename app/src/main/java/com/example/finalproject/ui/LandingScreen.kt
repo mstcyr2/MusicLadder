@@ -40,12 +40,6 @@ import com.example.finalproject.ui.viewmodel.AppViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-// TODO: Add NavController
-enum class LandingScreenStates() {
-    Browse,
-    Playlists
-}
-
 @Composable
 fun LandingScreen(
     navController: NavHostController,
