@@ -95,6 +95,7 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
 
     fun onLikeSong(user_id : String, song : SongModel, isLiked : Boolean) {
         _repository.toggleLike(user_id, song, isLiked)
+        _likedSongs.value = getLikedSongs(user_id)
     }
 
 //    private val _fetchedSongs: MutableState<List<SongModel>> = mutableStateOf(listOf())

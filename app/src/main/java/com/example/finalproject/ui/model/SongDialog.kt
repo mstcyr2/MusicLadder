@@ -44,9 +44,7 @@ fun SongDialog(song: Song, opened: MutableState<Boolean>, spotify_link: String) 
                         colors = ButtonDefaults.buttonColors(Color.White),
                         modifier = Modifier.size(80.dp, 40.dp)
                     ) {
-                        //Text("Play on spotify")
                         Image(painter = painterResource(id = R.drawable.ic_spotify_icon), contentDescription = "Play on Spotify")
-                        //Icon(imageVector = Icons.Outlined.PlayArrow, contentDescription = "Play on Spotify", tint = Color.Green)
                     }
                     Button(
                         onClick = { /*TODO*/ },

@@ -43,13 +43,13 @@ fun SongCard(
                 .padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.width(32.dp)) {
-                Text(song.rank.toString())
+                Text(song.rank.toString(), color = Color.Magenta)
             }
             Column(modifier = Modifier.width(120.dp)) {
-                Text(song.title, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                Text(song.title, maxLines = 2, overflow = TextOverflow.Ellipsis, color = Color.Magenta)
             }
             Column(modifier = Modifier.width(120.dp)) {
-                Text(song.artist, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                Text(song.artist, maxLines = 2, overflow = TextOverflow.Ellipsis, color = Color.Magenta)
             }
             Column(modifier = Modifier.width(32.dp)) {
                 IconButton(onClick =
