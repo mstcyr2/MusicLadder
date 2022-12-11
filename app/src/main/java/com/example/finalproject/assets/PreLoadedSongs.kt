@@ -1,4 +1,6 @@
 package com.example.finalproject.assets
+/*
+
 
 import android.database.sqlite.SQLiteException
 import androidx.compose.runtime.Composable
@@ -186,4 +188,4 @@ fun DatabaseConnection(vm: AppViewModel) {
     }
 
     //vm.setCurrentUserId("user_1") // TODO MOST IMPORTANT FOR WHEN SOMEONE LOGS IN
-}
+}*/

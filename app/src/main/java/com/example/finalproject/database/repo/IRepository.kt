@@ -8,6 +8,8 @@ import kotlin.collections.ArrayList
 
 abstract class IRepository {
     abstract suspend fun getSongs() : ArrayList<SongModel>
+    abstract fun sortByLikes() : ArrayList<SongModel>
+    abstract fun filterByGenre(genre : String) : ArrayList<SongModel>
     abstract suspend fun addSong(
         title: String,
         artist: String,
@@ -18,6 +20,8 @@ abstract class IRepository {
         user: String,
         pass: String
     ) : String?
+
+    abstract fun getUserName(user_id: String) : String?
 
     abstract fun addUser(
         user : String,

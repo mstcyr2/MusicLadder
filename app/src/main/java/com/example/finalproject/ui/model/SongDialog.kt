@@ -50,7 +50,6 @@ fun SongDialog(song: Song, opened: MutableState<Boolean>, spotify_link: String) 
                     }
                     Button(
                         onClick = { /*TODO*/ },
-                        colors = ButtonDefaults.buttonColors(Color.Magenta),
                         modifier = Modifier.size(80.dp, 40.dp)
                     ) {
                         Text("Add to playlist",
@@ -61,7 +60,6 @@ fun SongDialog(song: Song, opened: MutableState<Boolean>, spotify_link: String) 
                     }
                     Button(
                         onClick = { opened.value = false },
-                        colors = ButtonDefaults.buttonColors(Color.Magenta),
                         modifier = Modifier.size(80.dp, 40.dp)
                     ) {
                         Text("Dismiss",

@@ -1,25 +1,19 @@
 package com.example.finalproject.ui.model
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.finalproject.database.DatabaseHandler
 import com.example.finalproject.database.models.SongModel
 import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.viewmodel.AppViewModel
@@ -31,7 +25,8 @@ fun SongCard(
     songObject: SongModel,
     vm: AppViewModel
 ) {
-    val dbHandler = DatabaseHandler(LocalContext.current)
+    val context = LocalContext.current
+    val currentUser by vm.currentUser
     val opened = remember { mutableStateOf(false) }
     SongDialog(song = song, opened = opened, spotify_link = spotify_link)
     Card(
@@ -48,23 +43,22 @@ fun SongCard(
                 .padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.width(32.dp)) {
-                Text(song.rank.toString(), color = Color.Magenta)
+                Text(song.rank.toString())
             }
             Column(modifier = Modifier.width(120.dp)) {
-                Text(song.title, color = Color.Magenta, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                Text(song.title, maxLines = 2, overflow = TextOverflow.Ellipsis)
             }
             Column(modifier = Modifier.width(120.dp)) {
-                Text(song.artist, color = Color.Magenta, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                Text(song.artist, maxLines = 2, overflow = TextOverflow.Ellipsis)
             }
             Column(modifier = Modifier.width(32.dp)) {
                 IconButton(onClick =
                 {
-                    song.liked.value = !song.liked.value // The value will always change
-                    if (song.liked.value) {
-                        dbHandler.likeSong(user_id = vm.currentUser.value, song = songObject)
-                    } else {
-                        dbHandler.unlikeSong(user_id = vm.currentUser.value, song = songObject)
-                    }
+                    if (currentUser != "") {
+                        vm.onLikeSong(currentUser, songObject, song.liked.value)
+                        song.liked.value = !song.liked.value // The value will always change
+                    } else
+                        Toast.makeText(context, "Please log in to like songs", Toast.LENGTH_LONG).show()
                 }) {
                     Icon(
                         imageVector = if (song.liked.value) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,

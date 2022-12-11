@@ -5,15 +5,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.finalproject.database.DatabaseHandler
 import com.example.finalproject.database.models.SongModel
 import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.model.SongCard
@@ -41,12 +40,17 @@ fun TopFifty(
     genre: String,
     vm: AppViewModel
 ) {
-    val dbHandler = DatabaseHandler(LocalContext.current)
-    val songs: List<SongModel>
-    val likedSongs: List<String>
+    val allSongs: List<SongModel> by vm.sortedSongs
+    val filteredSongs: List<SongModel> by vm.filteredSongs
+    val songs : List<SongModel>
+    val likedSongs by vm.likedSongs
 
-    songs = dbHandler.getOrderedByGenre(genre)
-    likedSongs = dbHandler.getLikedSongs(vm.currentUser.value)
+    if (genre == "all genres") {
+        songs = allSongs
+    } else {
+        songs = filteredSongs
+    }
+
 
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -93,17 +97,9 @@ fun CategoryButtons(navController: NavHostController) {
     ) {
         Button(modifier = Modifier
             .size(width = 150.dp, height = 48.dp)
-            .padding(end = 8.dp), onClick = { navController.navigate(Routes.Browse.route) },
-            colors = ButtonDefaults.buttonColors(Color.Magenta)
+            .padding(end = 8.dp), onClick = { navController.navigate(Routes.Browse.route) }
         ) {
             Text(text = "<<< Go Back", color = Color.White)
         }
-//        Button(modifier = Modifier
-//            .size(width = 110.dp, height = 48.dp)
-//            .padding(end = 4.dp), onClick = { navController.navigate(Routes.Browse.route) },
-//            colors = ButtonDefaults.buttonColors(Color.Magenta)
-//        ) {
-//            Text(text = "Browse", color = Color.White)
-//        }
     }
 }

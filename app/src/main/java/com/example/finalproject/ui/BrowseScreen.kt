@@ -61,7 +61,7 @@ fun CategoryOrganization(
     navController: NavHostController,
     vm: AppViewModel
 ) {
-    val categoryNames = listOf("Rap", "Pop") // TODO Add more categories
+    val categoryNames = listOf("All Genres", "Rap", "Pop") // TODO Add more categories
 
     LazyVerticalGrid(
         modifier = Modifier.padding(top = 144.dp),
@@ -101,7 +101,7 @@ fun BrowseCard(
             .clickable {
                 vm.setSelectedCategory(category = category.lowercase())
                 navController.navigate(Routes.Category.route)
-                       },
+            },
         shape = RoundedCornerShape(5.dp),
         elevation = 4.dp
     ) {
@@ -134,15 +134,13 @@ fun Buttons(navController: NavHostController) {
     ) {
         Button(modifier = Modifier
             .size(width = 110.dp, height = 48.dp)
-            .padding(end = 8.dp), onClick = { navController.navigate(Routes.Landing.route) },
-            colors = ButtonDefaults.buttonColors(Color.Magenta)
+            .padding(end = 8.dp), onClick = { navController.navigate(Routes.Landing.route) }
         ) {
             Text(text = "Home", color = Color.White)
         }
         Button(modifier = Modifier
             .size(width = 110.dp, height = 48.dp)
-            .padding(end = 4.dp), onClick = { navController.navigate(Routes.PlayList.route) },
-            colors = ButtonDefaults.buttonColors(Color.Magenta)
+            .padding(end = 4.dp), onClick = { navController.navigate(Routes.PlayList.route) }
         ) {
             Text(text = "Playlists", color = Color.White)
         }
