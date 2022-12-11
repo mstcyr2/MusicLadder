@@ -11,6 +11,7 @@ abstract class IRepository {
     abstract fun sortByLikes() : ArrayList<SongModel>
     abstract fun filterByGenre(genre : String) : ArrayList<SongModel>
     abstract suspend fun addSong(
+        id: String,
         title: String,
         artist: String,
         category: String,

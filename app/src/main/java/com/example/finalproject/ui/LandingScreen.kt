@@ -1,8 +1,10 @@
 package com.example.finalproject.ui
 
 //import com.example.finalproject.assets.DatabaseConnection
+import DatabaseConnection
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -88,42 +90,45 @@ fun LandingScreen(
                     Icon(
                         imageVector = Icons.Filled.AccountCircle,
                         contentDescription = "profile",
-                        modifier = Modifier.size(200.dp),
+                        modifier = Modifier.size(200.dp).clickable {  },
                         tint = Color.LightGray
                     )
                     Text(name.value, fontSize = 32.sp)
-                    Text("Liked Songs", fontSize = 24.sp, textAlign = TextAlign.Start)
-                    LazyColumn(modifier = Modifier.background(Color.Magenta)){
-                        items(list) { song: SongModel ->
-                            val context = LocalContext.current
-                            val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(song.spotify_link)) }
-                            Card(modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 2.dp),
-                                elevation = 5.dp,
-                                shape = RectangleShape
-                            ) {
-                                Row(modifier = Modifier
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomStart) {
+                        Text("Liked Songs", fontSize = 24.sp)
+                        LazyColumn(modifier = Modifier.background(Color.Magenta)){
+                            items(list) { song: SongModel ->
+                                val context = LocalContext.current
+                                val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(song.spotify_link)) }
+                                Card(modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(20.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween
+                                    .padding(bottom = 2.dp),
+                                    elevation = 5.dp,
+                                    shape = RectangleShape
                                 ) {
-                                    Text(text = "${song.song_name}\n${song.artist_name}", modifier = Modifier.width(200.dp), overflow = TextOverflow.Ellipsis)
-                                    Button(
-                                        onClick = {
-                                            context.startActivity(intent)
-                                        },
-                                        colors = ButtonDefaults.buttonColors(Color.White),
-                                        modifier = Modifier.size(80.dp, 40.dp)
+                                    Row(modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(20.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
                                     ) {
-                                        Image(painter = painterResource(id = R.drawable.ic_spotify_icon), contentDescription = "Play on Spotify")
+                                        Text(text = "${song.song_name}\n${song.artist_name}", modifier = Modifier.width(200.dp), overflow = TextOverflow.Ellipsis)
+                                        Button(
+                                            onClick = {
+                                                context.startActivity(intent)
+                                            },
+                                            colors = ButtonDefaults.buttonColors(Color.White),
+                                            modifier = Modifier.size(80.dp, 40.dp)
+                                        ) {
+                                            Image(painter = painterResource(id = R.drawable.ic_spotify_icon), contentDescription = "Play on Spotify")
+                                        }
                                     }
                                 }
-                            }
 
+                            }
                         }
                     }
+
 
                 }
             }
@@ -133,7 +138,7 @@ fun LandingScreen(
     ){
         Column (modifier = Modifier.padding(32.dp)){
             Greeting(name = name.value, scope, scaffoldState)
-            NavButtons(nav = navController)
+            NavButtons(nav = navController, vm)
 
             TopTen(vm = vm)
         }
@@ -172,8 +177,11 @@ fun Greeting(name: String, scope: CoroutineScope, state: ScaffoldState) {
 
 @Composable
 fun NavButtons(
-    nav: NavHostController
+    nav: NavHostController,
+    vm: AppViewModel
 ) {
+    val context = LocalContext.current
+    val currentUser by vm.currentUser
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
         Button(modifier = Modifier
             .size(width = 110.dp, height = 48.dp)
@@ -183,7 +191,12 @@ fun NavButtons(
         }
         Button(modifier = Modifier
             .size(width = 110.dp, height = 48.dp)
-            .padding(end = 4.dp), onClick = { nav.navigate(Routes.PlayList.route) }
+            .padding(end = 4.dp), onClick = {
+            if (currentUser == "")
+                Toast.makeText(context, "Please log in to make playlists", Toast.LENGTH_LONG).show()
+            else
+                nav.navigate(Routes.PlayList.route)
+        }
         ) {
             Text(text = "Playlists", color = Color.White)
         }
@@ -192,16 +205,9 @@ fun NavButtons(
 
 @Composable
 fun TopTen(vm : AppViewModel) {
-    val songs: List<SongModel> by vm.sortedSongs
     val likedSongs by vm.likedSongs
+    val displaySongs by vm.topTen
 
-    val displaySongs: ArrayList<SongModel> = ArrayList()
-
-    for (i in 0..9) {
-        if (i < songs.size) {
-            displaySongs.add(songs[i])
-        }
-    }
 
     Row(
         modifier = Modifier.padding(top = 32.dp, bottom = 32.dp),

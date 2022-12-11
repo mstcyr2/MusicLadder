@@ -21,12 +21,14 @@ class AppRepository(context: Context) : IRepository() {
     }
 
     override suspend fun addSong(
+        id: String,
         title: String,
         artist: String,
         category: String,
         url: String
     ) {
         dbHandler.addNewSong(
+            song_id = id,
             song_name = title,
             artist_name = artist,
             category = category,

@@ -51,9 +51,6 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
         private const val USER_ID_COL_LIKED = "user_id"
         private const val LIKED_SONG_COL = "liked_song"
 
-        // Count for auto IDs
-        private var SONG_COUNT = 0
-
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -138,6 +135,7 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
     }
 
     fun addNewSong(
+        song_id: String?,
         song_name: String?,
         artist_name: String?,
         category: String?,
@@ -147,7 +145,7 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
         val db = this.writableDatabase
         val values = ContentValues()
 
-        values.put(ID_COL, category + "_" + SONG_COUNT)
+        values.put(ID_COL, song_id)
         values.put(NAME_COL, song_name)
         values.put(ARTIST_COL, artist_name)
         values.put(CATEGORY_COL, category)
@@ -155,7 +153,6 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
         values.put(SPOTIFY_COL, spotify_link)
 
         db.insertOrThrow(SONGS_TABLE_NAME, null, values)
-        SONG_COUNT += 1
         db.close()
     }
 

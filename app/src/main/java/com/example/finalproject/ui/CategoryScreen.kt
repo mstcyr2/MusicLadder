@@ -56,7 +56,10 @@ fun TopFifty(
         .fillMaxWidth()
         .padding(32.dp)) {
         Row(modifier = Modifier.padding(bottom = 32.dp)) {
-            Text(text = "${genre.capitalize()} Top 50", fontSize = 32.sp)
+            if (genre == "all genres")
+                Text(text = "ALL SONGS ", fontSize = 32.sp)
+            else
+                Text(text = "${genre.uppercase()}'S TOP SONGS ", fontSize = 32.sp)
         }
 
         CategoryButtons(navController = navController)

@@ -1,19 +1,23 @@
 package com.example.finalproject.ui.viewmodel
 
 import android.app.Application
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.database.sqlite.SQLiteException
+import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.finalproject.database.models.SongModel
 import com.example.finalproject.database.repo.AppRepository
 import com.example.finalproject.database.repo.IRepository
 import kotlinx.coroutines.launch
-import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
 
 class AppViewModel(app : Application) : AndroidViewModel(app) {
@@ -23,6 +27,8 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
 
     private val _likedSongs = mutableStateOf(ArrayList<String>())
     val likedSongs = _likedSongs
+
+    private val likesInTT = mutableStateOf(0) //the number of the users liked songs in the top ten
 
     private val _userPlaylists = mutableStateOf(ArrayList<String>())
     val userPlaylists = _userPlaylists
@@ -36,12 +42,21 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
     private val _filteredSongs = mutableStateOf(ArrayList<SongModel>())
     val filteredSongs = _filteredSongs
 
+    private val _topTen = mutableStateOf(ArrayList<SongModel>())
+    val topTen = _topTen
+
     private lateinit var _repository : IRepository
 
     init {
         viewModelScope.launch {
             _repository = AppRepository(getApplication())
             _sortedSongs.value = _repository.sortByLikes()
+            for (i in 0..9) {
+                if (i < _sortedSongs.value.size) {
+                    _topTen.value.add(_sortedSongs.value[i])
+                }
+            }
+
         }
     }
 
@@ -49,6 +64,14 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
         if (user_id != "") {
             _currentUser.value = user_id
             _likedSongs.value = getLikedSongs(user_id)
+            for (song in _topTen.value) {
+                if (_likedSongs.value.contains(song.song_id)) {
+                    likesInTT.value += 1
+                }
+            }
+            val notif = createNotification(likesInTT.value)
+            NotificationManagerCompat.from(getApplication<Application>().applicationContext)
+                .notify(likesInTT.hashCode(), notif)
         } else
             _currentUser.value = user_id
     }
@@ -96,6 +119,46 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
     fun onLikeSong(user_id : String, song : SongModel, isLiked : Boolean) {
         _repository.toggleLike(user_id, song, isLiked)
         _likedSongs.value = getLikedSongs(user_id)
+    }
+
+    suspend fun addNewSong(
+        id: String,
+        title: String,
+        artist: String,
+        category: String,
+        url: String
+    ) {
+        _repository.addSong(id, title, artist, category, url)
+    }
+
+    private fun createNotification(likes : Int): Notification {
+        createNotificationChannel()
+
+        val builder = NotificationCompat.Builder(getApplication<Application>().applicationContext, CHANNEL_ID)
+            .setSmallIcon(android.R.drawable.btn_star)
+            .setContentTitle("Congratulations!")
+            .setContentText("$likes of your likes made it to the top ten!")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        return builder.build()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "MusicLadder Notification"
+            val descriptionText = "Notification channel for MusicLadder"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getApplication<Application>().applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    companion object {
+        val CHANNEL_ID = "com.example.finalproject.channel"
     }
 
 //    private val _fetchedSongs: MutableState<List<SongModel>> = mutableStateOf(listOf())
