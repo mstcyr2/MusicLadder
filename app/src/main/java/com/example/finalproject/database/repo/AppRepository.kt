@@ -2,11 +2,16 @@ package com.example.finalproject.database.repo
 
 import android.content.Context
 import com.example.finalproject.database.DatabaseHandler
+import com.example.finalproject.database.models.PlaylistModel
 import com.example.finalproject.database.models.SongModel
 
 class AppRepository(context: Context) : IRepository() {
 
     private val dbHandler : DatabaseHandler = DatabaseHandler(context)
+
+    override fun createTables() {
+        dbHandler.createMainTables()
+    }
 
     override suspend fun getSongs() : ArrayList<SongModel> {
         return dbHandler.readSongs()
@@ -58,5 +63,32 @@ class AppRepository(context: Context) : IRepository() {
     }
     override fun getUserLikes(user_id: String): ArrayList<String> {
         return dbHandler.getLikedSongs(user_id)
+    }
+
+    override fun addSongToPlaylist(
+        playlist_id: String?,
+        user_id: String?,
+        song_id: String?
+    ) {
+        dbHandler.addNewSongToPlaylist(playlist_id, user_id, song_id)
+    }
+    override fun deleteSongFromPlaylist(
+        user_id: String?,
+        song_id: String?
+    ) {
+        deleteSongFromPlaylist(user_id, song_id)
+    }
+    override fun getSongsFromPlaylist(
+        playlist_id: String?,
+        user_id: String?
+    ) : ArrayList<String> {
+        return dbHandler.getSongsFromPlaylist(playlist_id, user_id)
+    }
+    override fun getUserPlaylists(user_id : String) : ArrayList<PlaylistModel> {
+        return dbHandler.getUserPlaylists(user_id)
+    }
+
+    override fun addNewPlaylist(user_id: String, playlist_name: String) {
+        dbHandler.addNewPlaylist(user_id, playlist_name)
     }
 }

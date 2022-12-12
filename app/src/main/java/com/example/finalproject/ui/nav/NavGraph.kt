@@ -30,7 +30,7 @@ fun NavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.Landing.route
+        startDestination = Routes.PlayList.route
     ) {
         composable(Routes.Landing.route) {
             LandingScreen(navController = navController, vm = vm)
@@ -54,7 +54,7 @@ fun NavGraph() {
         composable(Routes.PlayList.route) {
             PlaylistScreen(
                 navController = navController,
-                list = remember { mutableStateOf(MyPlaylists) }
+                vm
             )
 
             Log.d("App", "Navigated to the playlist page")
@@ -68,6 +68,9 @@ fun NavGraph() {
             Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
                 LogInScreen(navController = navController, vm)
             }
+        }
+        composable(Routes.SongsInPlaylist.route) {
+            PlaylistSongsScreen(navController = navController, vm = vm)
         }
 
     }

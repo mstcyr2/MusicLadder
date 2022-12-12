@@ -14,6 +14,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.finalproject.database.models.PlaylistModel
 import com.example.finalproject.database.models.SongModel
 import com.example.finalproject.database.repo.AppRepository
 import com.example.finalproject.database.repo.IRepository
@@ -30,8 +31,11 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
 
     private val likesInTT = mutableStateOf(0) //the number of the users liked songs in the top ten
 
-    private val _userPlaylists = mutableStateOf(ArrayList<String>())
+    private val _userPlaylists = mutableStateOf(ArrayList<PlaylistModel>())
     val userPlaylists = _userPlaylists
+
+    private val _currentPlaylistSongs = mutableStateOf(ArrayList<SongModel>())
+    val currentPlaylistSongs = _currentPlaylistSongs
 
     private val _selectedCategory = mutableStateOf("")
     val selectedCategory = _selectedCategory
@@ -50,6 +54,7 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
     init {
         viewModelScope.launch {
             _repository = AppRepository(getApplication())
+            _repository.createTables()
             _sortedSongs.value = _repository.sortByLikes()
             for (i in 0..9) {
                 if (i < _sortedSongs.value.size) {
@@ -61,6 +66,7 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
     }
 
     private fun onSetCurrentUser(user_id: String) {
+        likesInTT.value = 0
         if (user_id != "") {
             _currentUser.value = user_id
             _likedSongs.value = getLikedSongs(user_id)
@@ -69,9 +75,13 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
                     likesInTT.value += 1
                 }
             }
-            val notif = createNotification(likesInTT.value)
-            NotificationManagerCompat.from(getApplication<Application>().applicationContext)
-                .notify(likesInTT.hashCode(), notif)
+            if (likesInTT.value > 0) {
+                val notif = createNotification(likesInTT.value)
+                NotificationManagerCompat.from(getApplication<Application>().applicationContext)
+                    .notify(likesInTT.hashCode(), notif)
+            }
+            _userPlaylists.value = getUserPlaylists(user_id)
+
         } else {
             _currentUser.value = user_id
             _likedSongs.value = ArrayList()
@@ -114,15 +124,50 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
 
     fun onLogOut() {
         onSetCurrentUser("")
+        likesInTT.value = 0
     }
 
     private fun getLikedSongs(user_id: String) : ArrayList<String> {
         return _repository.getUserLikes(user_id)
     }
 
+    fun getUserPlaylists(user_id : String) : ArrayList<PlaylistModel> {
+        return _repository.getUserPlaylists(user_id)
+    }
+
+    fun getUserPlaylistSongs(playlist_id : String, user_id : String) : ArrayList<String> {
+        return _repository.getSongsFromPlaylist(playlist_id, user_id)
+    }
+
+    fun onOpenPlaylist(playlist_id: String) {
+        _currentPlaylistSongs.value = ArrayList<SongModel>()
+        val playlistSongs = getUserPlaylistSongs(playlist_id, _currentUser.value)
+        for(song in _sortedSongs.value) {
+            if (playlistSongs.contains(song.song_id)) {
+                _currentPlaylistSongs.value.add(song)
+            }
+        }
+    }
+
+    fun onAddSongToPlaylist(playlist_id : String, song_id: String) {
+        _repository.addSongToPlaylist(playlist_id, _currentUser.value, song_id)
+    }
+
     fun onLikeSong(user_id : String, song : SongModel, isLiked : Boolean) {
         _repository.toggleLike(user_id, song, isLiked)
-        _likedSongs.value = getLikedSongs(user_id)
+        onSetCurrentUser(user_id)
+//        _likedSongs.value = getLikedSongs(user_id)
+//        _sortedSongs.value = _repository.sortByLikes()
+//        _topTen.value = ArrayList<SongModel>()
+//        for (i in 0..9) {
+//            if (i < _sortedSongs.value.size) {
+//                _topTen.value.add(_sortedSongs.value[i])
+//            }
+//        }
+    }
+
+    fun addNewPlaylist(user_id: String, playlist_name: String) {
+        _repository.addNewPlaylist(user_id, playlist_name)
     }
 
     suspend fun addNewSong(

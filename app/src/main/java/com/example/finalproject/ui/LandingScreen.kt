@@ -72,7 +72,7 @@ fun LandingScreen(
     
     
 
-    //DatabaseConnection(vm = vm)
+    DatabaseConnection(vm = vm)
 
     Scaffold(
         drawerContent = {
@@ -99,8 +99,7 @@ fun LandingScreen(
                         imageVector = Icons.Filled.AccountCircle,
                         contentDescription = "profile",
                         modifier = Modifier
-                            .size(200.dp)
-                            .clickable { },
+                            .size(200.dp),
                         tint = Color.LightGray
                     )
                     Text(name.value, fontSize = 32.sp)

@@ -28,7 +28,7 @@ fun SongCard(
     val context = LocalContext.current
     val currentUser by vm.currentUser
     val opened = remember { mutableStateOf(false) }
-    SongDialog(song = song, opened = opened, spotify_link = spotify_link)
+    SongDialog(song = song, opened = opened, spotify_link = spotify_link, songObject.song_id, vm)
     Card(
         modifier = Modifier
             .fillMaxSize()
