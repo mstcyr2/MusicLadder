@@ -7,13 +7,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.example.finalproject.ui.*
-import com.example.finalproject.ui.data.MyPlaylists
 import com.example.finalproject.ui.viewmodel.AppViewModel
 
 /**
@@ -51,7 +52,8 @@ fun NavGraph(
         }
 
         composable(Routes.PlayList.route) {
-            PlaylistScreen(vm)
+            PlaylistScreen(navController = navController, vm)
+
             Log.d("App", "Navigated to the playlist page")
         }
         composable(Routes.SignUp.route) {
@@ -71,13 +73,13 @@ fun NavGraph(
 @ExperimentalFoundationApi
 @Composable
 fun PlaylistScreen(
+    navController: NavHostController,
     vm: AppViewModel
 ) {
-    val navController: NavHostController = rememberNavController()
     val userPlaylists by vm.userPlaylists
     PlaylistsView(
         navController,
-        onFilter=vm::filter,
+        onSearch=vm::onSearch,
         userPlaylists
     )
 }

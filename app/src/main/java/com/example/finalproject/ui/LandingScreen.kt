@@ -89,21 +89,29 @@ fun LandingScreen(
                 Text(
                     text = "Log Out",
                     fontSize = 24.sp,
-                    modifier = Modifier.clickable {
-                        vm.onLogOut()
-                        navController.navigate(Routes.Landing.route)
-                    })
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clickable {
+                            vm.onLogOut()
+                            navController.navigate(Routes.Landing.route)
+                                   },
+                    style = TextStyle(textDecoration = TextDecoration.Underline)
+                )
                 Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         imageVector = Icons.Filled.AccountCircle,
                         contentDescription = "profile",
                         modifier = Modifier
-                            .size(200.dp)
+                            .size(150.dp)
                             .clickable { },
                         tint = Color.LightGray
                     )
-                    Text(name.value, fontSize = 32.sp)
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomStart) {
+                    Text(name.value, fontSize = 30.sp)
+                    Box(modifier = Modifier
+                        .padding(16.dp),
+                        contentAlignment = Alignment.BottomStart
+                    ) {
                         Text("Liked Songs", fontSize = 24.sp)
                         LazyColumn(modifier = Modifier.background(Color.Magenta)){
                             items(list) { song: SongModel ->

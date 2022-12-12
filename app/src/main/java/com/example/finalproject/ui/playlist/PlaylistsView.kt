@@ -9,18 +9,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.finalproject.ui.data.Playlist
 import com.example.finalproject.ui.nav.Routes
+import com.example.finalproject.ui.viewmodel.AppViewModel
+import java.util.*
+import kotlin.collections.ArrayList
 
 @Composable
 fun PlaylistsView(
     navController: NavHostController,
-    onFilter: (String) -> Unit,
+    onSearch: (String) -> Unit,
     list: List<Playlist>
 ) {
+    val textList = remember { mutableStateOf(TextFieldValue("")) }
+    val items by remember { mutableStateOf(listOf(list.toString())) }
+    val searchedText = textList.value.text
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -31,7 +38,7 @@ fun PlaylistsView(
         }
 
         ButtonsBrowse(navController)
-        SearchBar(onFilter = onFilter)
+        SearchBar(onSearch = onSearch)
         LazyColumn(modifier = Modifier.background(Color.Magenta)){
             items(list) { playlist: Playlist ->
                 Card(modifier = Modifier
@@ -50,7 +57,6 @@ fun PlaylistsView(
                         Text(text = playlist.songCount.toString())
                     }
                 }
-
             }
         }
     }
