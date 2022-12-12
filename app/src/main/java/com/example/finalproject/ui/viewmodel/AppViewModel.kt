@@ -155,8 +155,7 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
 
     fun onLikeSong(user_id : String, song : SongModel, isLiked : Boolean) {
         _repository.toggleLike(user_id, song, isLiked)
-        onSetCurrentUser(user_id)
-//        _likedSongs.value = getLikedSongs(user_id)
+        _likedSongs.value = getLikedSongs(user_id)
 //        _sortedSongs.value = _repository.sortByLikes()
 //        _topTen.value = ArrayList<SongModel>()
 //        for (i in 0..9) {
