@@ -77,14 +77,13 @@ fun LandingScreen(
     Scaffold(
         drawerContent = {
             if (currentUser == "") {
-                Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
-                    .padding(30.dp)
-                    .fillMaxWidth()) {
-                    Text(text = "Sign In",
-                        fontSize = 32.sp,
-                        textDecoration = TextDecoration.Underline,
-                        modifier = Modifier.clickable { navController.navigate(Routes.LogIn.route) }
-                    )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .padding(30.dp)
+                        .fillMaxSize()) {
+                    SignInButton(nav = navController)
                 }
             } else {
                 Text(
@@ -210,6 +209,18 @@ fun NavButtons(
         ) {
             Text(text = "Playlists", color = Color.White)
         }
+    }
+}
+
+@Composable
+fun SignInButton(nav: NavHostController) {
+    Button(
+        onClick = { nav.navigate(Routes.LogIn.route) },
+    ) {
+        Text(text = "Sign In",
+            fontSize = 32.sp,
+            color = Color.White
+        )
     }
 }
 

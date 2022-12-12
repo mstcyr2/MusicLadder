@@ -8,6 +8,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteException
 import android.os.Build
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
@@ -17,6 +18,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.finalproject.database.models.SongModel
 import com.example.finalproject.database.repo.AppRepository
 import com.example.finalproject.database.repo.IRepository
+import com.example.finalproject.ui.data.MyPlaylists
+import com.example.finalproject.ui.data.Playlist
 import kotlinx.coroutines.launch
 import java.lang.NullPointerException
 
@@ -30,7 +33,7 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
 
     private val likesInTT = mutableStateOf(0) //the number of the users liked songs in the top ten
 
-    private val _userPlaylists = mutableStateOf(ArrayList<String>())
+    private val _userPlaylists: MutableState<List<Playlist>> =  mutableStateOf(MyPlaylists)
     val userPlaylists = _userPlaylists
 
     private val _selectedCategory = mutableStateOf("")
@@ -123,6 +126,10 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
     fun onLikeSong(user_id : String, song : SongModel, isLiked : Boolean) {
         _repository.toggleLike(user_id, song, isLiked)
         _likedSongs.value = getLikedSongs(user_id)
+    }
+
+    fun filter(search: String) {
+        _userPlaylists.value = userPlaylists.value.filter { p -> p.title.contains(search, true) }
     }
 
     suspend fun addNewSong(
