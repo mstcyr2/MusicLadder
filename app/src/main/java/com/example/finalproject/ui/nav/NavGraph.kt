@@ -1,21 +1,20 @@
 package com.example.finalproject.ui.nav
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.SaveableStateHolder
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.example.finalproject.ui.*
-import com.example.finalproject.ui.data.MyPlaylists
 import com.example.finalproject.ui.viewmodel.AppViewModel
 
 /**
@@ -23,11 +22,12 @@ import com.example.finalproject.ui.viewmodel.AppViewModel
  * Each composable listed as a screen, and will execute specific screen
  * TODO: Genre specific interfacing for the top 50 list (right now just "Rock Top 50")
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NavGraph() {
-    val navController = rememberNavController()
+fun NavGraph(
+    navController: NavHostController = rememberNavController()
+) {
     val vm: AppViewModel = viewModel()
-
     NavHost(
         navController = navController,
         startDestination = Routes.Landing.route
@@ -52,10 +52,7 @@ fun NavGraph() {
         }
 
         composable(Routes.PlayList.route) {
-            PlaylistScreen(
-                navController = navController,
-                list = remember { mutableStateOf(MyPlaylists) }
-            )
+            PlaylistScreen(navController = navController, vm)
 
             Log.d("App", "Navigated to the playlist page")
         }
@@ -71,5 +68,18 @@ fun NavGraph() {
         }
 
     }
+}
 
+@ExperimentalFoundationApi
+@Composable
+fun PlaylistScreen(
+    navController: NavHostController,
+    vm: AppViewModel
+) {
+    val userPlaylists by vm.userPlaylists
+    PlaylistsView(
+        navController,
+        onSearch=vm::onSearch,
+        userPlaylists
+    )
 }

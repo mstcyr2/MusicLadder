@@ -4,7 +4,7 @@ import android.content.Context
 import com.example.finalproject.database.DatabaseHandler
 import com.example.finalproject.database.models.SongModel
 
-class AppRepository(context: Context) : IRepository() {
+class  AppRepository(context: Context) : IRepository() {
 
     private val dbHandler : DatabaseHandler = DatabaseHandler(context)
 

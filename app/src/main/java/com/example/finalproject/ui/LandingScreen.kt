@@ -77,34 +77,41 @@ fun LandingScreen(
     Scaffold(
         drawerContent = {
             if (currentUser == "") {
-                Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
-                    .padding(30.dp)
-                    .fillMaxWidth()) {
-                    Text(text = "Sign In",
-                        fontSize = 32.sp,
-                        textDecoration = TextDecoration.Underline,
-                        modifier = Modifier.clickable { navController.navigate(Routes.LogIn.route) }
-                    )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .padding(30.dp)
+                        .fillMaxSize()) {
+                    SignInButton(nav = navController)
                 }
             } else {
                 Text(
                     text = "Log Out",
                     fontSize = 24.sp,
-                    modifier = Modifier.clickable {
-                        vm.onLogOut()
-                        navController.navigate(Routes.Landing.route)
-                    })
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clickable {
+                            vm.onLogOut()
+                            navController.navigate(Routes.Landing.route)
+                                   },
+                    style = TextStyle(textDecoration = TextDecoration.Underline)
+                )
                 Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Icon(
                         imageVector = Icons.Filled.AccountCircle,
                         contentDescription = "profile",
                         modifier = Modifier
-                            .size(200.dp)
+                            .size(150.dp)
                             .clickable { },
                         tint = Color.LightGray
                     )
-                    Text(name.value, fontSize = 32.sp)
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomStart) {
+                    Text(name.value, fontSize = 30.sp)
+                    Box(modifier = Modifier
+                        .padding(16.dp),
+                        contentAlignment = Alignment.BottomStart
+                    ) {
                         Text("Liked Songs", fontSize = 24.sp)
                         LazyColumn(modifier = Modifier.background(Color.Magenta)){
                             items(list) { song: SongModel ->
@@ -210,6 +217,18 @@ fun NavButtons(
         ) {
             Text(text = "Playlists", color = Color.White)
         }
+    }
+}
+
+@Composable
+fun SignInButton(nav: NavHostController) {
+    Button(
+        onClick = { nav.navigate(Routes.LogIn.route) },
+    ) {
+        Text(text = "Sign In",
+            fontSize = 32.sp,
+            color = Color.White
+        )
     }
 }
 

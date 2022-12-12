@@ -16,8 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavHostController
 import com.example.finalproject.R
@@ -82,10 +84,15 @@ fun LogInScreen(
         ) {
             Text("Log In!")
         }
-        Text(text = "Don't have an account? Sign Up here!", modifier = Modifier.clickable {
-            navController.navigate(Routes.SignUp.route)
-        })
-
+        Row {
+            Text(text = "Don't have an account? ")
+            Text(
+                text = "Sign Up here!",
+                style = TextStyle(textDecoration = TextDecoration.Underline),
+                modifier = Modifier.clickable {
+                navController.navigate(Routes.SignUp.route)
+            })
+        }
     }
 }
 
