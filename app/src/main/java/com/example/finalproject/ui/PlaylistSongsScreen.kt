@@ -3,7 +3,8 @@ package com.example.finalproject.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.finalproject.database.models.SongModel
 import com.example.finalproject.ui.data.Song
@@ -64,9 +64,6 @@ fun PlaylistSongList(
                 }
             }
         }
-        Button(onClick = {navController.navigate(Routes.Browse.route)}) {
-            Text("Add Song")
-        }
     }
 }
 
@@ -81,13 +78,18 @@ fun BackButton(navController: NavHostController) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 62.dp),
-        horizontalArrangement = Arrangement.Start
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Button(modifier = Modifier
             .size(width = 150.dp, height = 48.dp)
             .padding(end = 8.dp), onClick = { navController.popBackStack() }
         ) {
             Text(text = "<<< Go Back", color = Color.White)
+        }
+        Button(modifier = Modifier
+            .size(width = 150.dp, height = 48.dp)
+            .padding(end = 8.dp),onClick = {navController.navigate(Routes.Browse.route)}) {
+            Text("Add Song")
         }
     }
 }

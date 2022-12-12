@@ -6,22 +6,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.SaveableStateHolder
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.finalproject.ui.*
-import com.example.finalproject.ui.data.MyPlaylists
 import com.example.finalproject.ui.viewmodel.AppViewModel
 
 /**
  * Navigation
  * Each composable listed as a screen, and will execute specific screen
- * TODO: Genre specific interfacing for the top 50 list (right now just "Rock Top 50")
  */
 @Composable
 fun NavGraph() {
@@ -30,7 +25,7 @@ fun NavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.PlayList.route
+        startDestination = Routes.Landing.route
     ) {
         composable(Routes.Landing.route) {
             LandingScreen(navController = navController, vm = vm)

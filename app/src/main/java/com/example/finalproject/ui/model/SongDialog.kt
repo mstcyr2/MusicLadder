@@ -15,7 +15,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
-import androidx.core.content.ContextCompat.startActivity
 import com.example.finalproject.R
 import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.viewmodel.AppViewModel

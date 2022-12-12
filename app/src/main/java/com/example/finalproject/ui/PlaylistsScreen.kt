@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -46,21 +47,15 @@ fun PlaylistScreen(navController: NavHostController, vm : AppViewModel) {
 
         Row(modifier = Modifier
             .fillMaxWidth()
+            .height(56.dp)
             .padding(top = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceEvenly
         ){
-            TextField(value = "",
-                onValueChange = {},
-                leadingIcon = {
-                    Icon(imageVector = Icons.Outlined.Search, contentDescription = "")
-                },
-                placeholder = { Text(text = "Search for a playlist") }
-            )
-            Button(onClick = { /*TODO*/ },
-                shape = RectangleShape,
-                modifier = Modifier.height(56.dp)
+            Box(modifier = Modifier.fillMaxHeight().width(350.dp)
+                .background(Color.Magenta, RectangleShape),
+                contentAlignment = Alignment.Center
             ) {
-                Text(text = "Search")
+                Text(text = "Open a playlist!", color = Color.White, fontWeight = FontWeight.Bold)
             }
             Button(onClick = { opened.value = true },
                 shape = RectangleShape,

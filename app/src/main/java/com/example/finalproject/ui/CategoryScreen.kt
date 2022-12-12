@@ -28,14 +28,14 @@ fun CategoryScreen(
     genre: String,
     vm: AppViewModel
 ) {
-    TopFifty(navController = navController, genre = genre, vm = vm)
+    TopFifteen(navController = navController, genre = genre, vm = vm)
 }
 
 /**
  * Displays the top 50 list of the given genre, clickable cards
  */
 @Composable
-fun TopFifty(
+fun TopFifteen(
     navController: NavHostController,
     genre: String,
     vm: AppViewModel

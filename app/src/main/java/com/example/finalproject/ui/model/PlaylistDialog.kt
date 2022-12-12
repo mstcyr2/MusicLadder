@@ -1,26 +1,20 @@
 package com.example.finalproject.ui.model
 
 
-import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.*
-import androidx.core.content.ContextCompat.startActivity
-import com.example.finalproject.R
-import com.example.finalproject.ui.data.Playlist
-import com.example.finalproject.ui.data.Song
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.finalproject.ui.viewmodel.AppViewModel
 
 @Composable

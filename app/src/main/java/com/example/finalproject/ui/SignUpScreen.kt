@@ -5,11 +5,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -17,8 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.finalproject.R
 import com.example.finalproject.ui.nav.Routes
@@ -64,11 +70,7 @@ fun SignUpScreen(
                 Text(text = "Password")
             },
             visualTransformation = PasswordVisualTransformation(),
-            trailingIcon = {
-                IconToggleButton(checked = false, onCheckedChange = {}) {
-                    Icon(imageVector = Icons.Filled.Info, contentDescription = "Toggle Show Password")
-                }
-            }
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
         TextField(
             value = verifier.value,
@@ -78,11 +80,7 @@ fun SignUpScreen(
                 Text(text = "Verify Password")
             },
             visualTransformation = PasswordVisualTransformation(),
-            trailingIcon = {
-                IconToggleButton(checked = false, onCheckedChange = {}) {
-                    Icon(imageVector = Icons.Filled.Info, contentDescription = "Toggle Show Password")
-                }
-            }
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
         Button(onClick = { 
             if (password.value == verifier.value) {

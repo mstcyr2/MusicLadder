@@ -2,10 +2,6 @@ package com.example.finalproject.database.repo
 
 import com.example.finalproject.database.models.PlaylistModel
 import com.example.finalproject.database.models.SongModel
-import com.example.finalproject.database.models.UserModel
-import com.example.finalproject.ui.data.Song
-import java.util.*
-import kotlin.collections.ArrayList
 
 abstract class IRepository {
     abstract fun createTables()

@@ -10,7 +10,6 @@ import com.example.finalproject.database.models.LikedSongsModel
 import com.example.finalproject.database.models.PlaylistModel
 import com.example.finalproject.database.models.PlaylistSongsModel
 import com.example.finalproject.database.models.SongModel
-import com.example.finalproject.ui.data.Playlist
 
 interface SongInterface {
     suspend fun readSongs(): ArrayList<SongModel>
@@ -47,6 +46,7 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
 
         //PlaylistSongModel constraints TODO: USING THIS ONE
         private const val ID_COL_PLAYLIST_SONG = "playlist_song_id"
+        private const val SONG_PLAYLIST_ID = "song_playlist_id"
         private const val USER_ID_COL_PLAYLIST_SONG = "playlist_song_user_id"
         private const val SONG_ID_COL_PLAYLIST_SONG = "song_playlist_song_id"
 
@@ -93,6 +93,7 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
         // Table for PLAYLISTS user songs
         val query3 = ("CREATE TABLE IF NOT EXISTS " + PLAYLISTS_SONGS_TABLE_NAME + " ("
                 + ID_COL_PLAYLIST_SONG + " TEXT PRIMARY KEY, "
+                + SONG_PLAYLIST_ID + " TEXT, "
                 + USER_ID_COL_PLAYLIST_SONG + " TEXT, "
                 + SONG_ID_COL_PLAYLIST_SONG + " TEXT)")
 
@@ -109,21 +110,6 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
 
     fun createMainTables() {
         val db = this.writableDatabase
-
-
-        // TODO: REMOVE THESE DROPS AFTER DEBUG
-//        val query1 = ("DROP TABLE IF EXISTS $SONGS_TABLE_NAME")
-//
-//        db?.execSQL(query1)
-//
-//        val query2 = ("DROP TABLE IF EXISTS $USERS_TABLE_NAME")
-//
-//        db?.execSQL(query2)
-//
-//        val query5 = ("DROP TABLE IF EXISTS $LIKED_SONGS_TABLE_NAME")
-//
-//        db?.execSQL(query5)
-        /////////////////////////////////////////////////////////////
 
         val query4 = ("CREATE TABLE IF NOT EXISTS " + LIKED_SONGS_TABLE_NAME + " ("
                 + ID_COL_LIKED_SONGS + " TEXT PRIMARY KEY, "
@@ -168,32 +154,6 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
         db?.execSQL(query7)
     }
 
-    /**
-     * This creates a pop & rap playlist for each user_id
-     *
-     * EXAMPLE:
-     * When the user's account is first created / logged in
-     * if the playlists do not exist, then execute this to create
-     * a "rap" and a "pop" id for the user being bound by the user_id
-     */
-    fun createPlaylists(user_id: String?) {
-        val db = this.writableDatabase
-        val values = ContentValues()
-
-        values.put(ID_COL_PLAYLIST, "rap")
-        values.put(USER_ID_COL_PLAYLIST, user_id)
-
-        db.insertOrThrow(PLAYLISTS_TABLE_NAME, null, values)
-
-        val values2 = ContentValues()
-
-        values2.put(ID_COL_PLAYLIST, "pop")
-        values2.put(USER_ID_COL_PLAYLIST, user_id)
-
-        db.insertOrThrow(PLAYLISTS_TABLE_NAME, null, values2)
-
-        db.close()
-    }
 
     fun addNewPlaylist(user_id: String, playlist_name: String) {
         val db = this.writableDatabase
@@ -233,8 +193,10 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
     ) {
         val db = this.writableDatabase
         val values = ContentValues()
+        values.clear()
 
-        values.put(ID_COL_PLAYLIST_SONG, playlist_id)
+        values.put(ID_COL_PLAYLIST_SONG, getRandomString(10))
+        values.put(SONG_PLAYLIST_ID, playlist_id)
         values.put(USER_ID_COL_PLAYLIST_SONG, user_id)
         values.put(SONG_ID_COL_PLAYLIST_SONG, song_id)
 
@@ -272,22 +234,23 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
         val db = this.readableDatabase
         val cursor: Cursor = db.rawQuery(
             "SELECT * FROM $PLAYLISTS_SONGS_TABLE_NAME " +
-                    "WHERE $USER_ID_COL_PLAYLIST_SONG='$user_id' AND $ID_COL_PLAYLIST_SONG='$playlist_id'", null)
+                    "WHERE $USER_ID_COL_PLAYLIST_SONG='$user_id' AND $SONG_PLAYLIST_ID='$playlist_id'", null)
         val fetchedSongs: ArrayList<PlaylistSongsModel> = ArrayList()
 
         if (cursor.moveToFirst()) {
             do {
                 fetchedSongs.add(
                     PlaylistSongsModel(
-                        cursor.getString(0), // playlist_id
-                        cursor.getString(1), // user_id
-                        cursor.getString(2) // song_id
+                        cursor.getString(1), // playlist_id
+                        cursor.getString(2), // user_id
+                        cursor.getString(3) // song_id
                     )
                 )
             } while (cursor.moveToNext())
         }
 
         cursor.close()
+        db.close()
 
         val songIdsInPlaylist: ArrayList<String> = ArrayList()
 
@@ -300,6 +263,7 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
 
     fun getUserPlaylists(user_id : String) : ArrayList<PlaylistModel> {
         val db = this.readableDatabase
+
         val cursor = db.rawQuery("SELECT * FROM $PLAYLISTS_TABLE_NAME WHERE " +
                 "$USER_ID_COL_PLAYLIST='$user_id'", null)
         val playlists = ArrayList<PlaylistModel>()
@@ -316,7 +280,7 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
             cursor.close()
             return playlists
         }
-
+        db.close()
         cursor.close()
         return playlists
     }
@@ -368,21 +332,6 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
             .joinToString("")
     }
 
-    fun addLikedSong(
-        user_id: String?,
-        liked_song: String?
-    ) {
-        val db = this.writableDatabase
-        val values = ContentValues()
-
-        values.put(ID_COL_LIKED_SONGS, getRandomString(5))
-        values.put(USER_ID_COL_LIKED, user_id)
-        values.put(LIKED_SONG_COL, liked_song)
-
-        db.insertOrThrow(LIKED_SONGS_TABLE_NAME, null, values)
-        db.close()
-    }
-
     fun likeSong(user_id: String, song: SongModel) {
         val db = this.writableDatabase
         val values = ContentValues()
@@ -406,7 +355,8 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
 
         values.clear()
 
-        values.put(ID_COL_LIKED_SONGS, getRandomString(5))
+
+        values.put(ID_COL_LIKED_SONGS, getRandomString(10))
         values.put(USER_ID_COL_LIKED, user_id)
         values.put(LIKED_SONG_COL, song.song_id)
 

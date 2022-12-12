@@ -1,7 +1,6 @@
 package com.example.finalproject.ui
 
-//import com.example.finalproject.assets.DatabaseConnection
-import DatabaseConnection
+
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -24,8 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -34,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.finalproject.R
 import com.example.finalproject.database.models.SongModel
-import com.example.finalproject.ui.data.Playlist
 import com.example.finalproject.ui.data.Song
 import com.example.finalproject.ui.model.SongCard
 import com.example.finalproject.ui.nav.Routes
@@ -42,11 +38,6 @@ import com.example.finalproject.ui.viewmodel.AppViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-// TODO: Add NavController
-enum class LandingScreenStates() {
-    Browse,
-    Playlists
-}
 
 @Composable
 fun LandingScreen(
@@ -69,10 +60,6 @@ fun LandingScreen(
             list.add(song)
         }
     }
-    
-    
-
-    DatabaseConnection(vm = vm)
 
     Scaffold(
         drawerContent = {
@@ -103,8 +90,8 @@ fun LandingScreen(
                         tint = Color.LightGray
                     )
                     Text(name.value, fontSize = 32.sp)
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.BottomStart) {
-                        Text("Liked Songs", fontSize = 24.sp)
+                    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
+                        Text("Liked Songs", fontSize = 24.sp, modifier = Modifier.padding(vertical = 8.dp))
                         LazyColumn(modifier = Modifier.background(Color.Magenta)){
                             items(list) { song: SongModel ->
                                 val context = LocalContext.current

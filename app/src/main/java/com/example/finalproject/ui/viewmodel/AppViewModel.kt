@@ -140,7 +140,7 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
     }
 
     fun onOpenPlaylist(playlist_id: String) {
-        _currentPlaylistSongs.value = ArrayList<SongModel>()
+        _currentPlaylistSongs.value = ArrayList()
         val playlistSongs = getUserPlaylistSongs(playlist_id, _currentUser.value)
         for(song in _sortedSongs.value) {
             if (playlistSongs.contains(song.song_id)) {
@@ -156,13 +156,6 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
     fun onLikeSong(user_id : String, song : SongModel, isLiked : Boolean) {
         _repository.toggleLike(user_id, song, isLiked)
         _likedSongs.value = getLikedSongs(user_id)
-//        _sortedSongs.value = _repository.sortByLikes()
-//        _topTen.value = ArrayList<SongModel>()
-//        for (i in 0..9) {
-//            if (i < _sortedSongs.value.size) {
-//                _topTen.value.add(_sortedSongs.value[i])
-//            }
-//        }
     }
 
     fun addNewPlaylist(user_id: String, playlist_name: String) {
@@ -209,17 +202,4 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
         val CHANNEL_ID = "com.example.finalproject.channel"
     }
 
-//    private val _fetchedSongs: MutableState<List<SongModel>> = mutableStateOf(listOf())
-//    val fetchedSongs: State<List<SongModel>> = _fetchedSongs
-//
-//    private lateinit var _repository: SongsRepository
-//    private val songsDatabase: SongInterface = DatabaseHandler(context)
-//
-//    init {
-//        viewModelScope.launch {
-//            val fetchedSongs = songsDatabase.readSongs()
-//            _repository = SongMemoryRepository(fetchedSongs)
-//            _fetchedSongs.value = _repository.readSongs()
-//        }
-//    }
 }

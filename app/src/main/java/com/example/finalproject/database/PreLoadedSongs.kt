@@ -1,16 +1,12 @@
-/*
-package com.example.finalproject.assets
-*/
+package com.example.finalproject.database
 
 
 import android.database.sqlite.SQLiteException
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewModelScope
-import com.example.finalproject.database.DatabaseHandler
 import com.example.finalproject.ui.viewmodel.AppViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun DatabaseConnection(vm: AppViewModel) {
@@ -137,13 +133,8 @@ fun DatabaseConnection(vm: AppViewModel) {
             "rap",
             "https://open.spotify.com/track/2PljnVsnl2PRwCvfhbdQup?si=ddfaf3dda0e04857"
         )
-
-        vm.onSignUp(
-            "admin",
-            "password"
-        )
     } catch(e : SQLiteException) {
-        // Log.d("MusicLadder", e.toString())
+        Log.d("MusicLadder", e.toString())
     }
 
         try {
@@ -380,11 +371,8 @@ fun DatabaseConnection(vm: AppViewModel) {
 
 
         } catch (e: SQLiteException) {
-            // Log.d("MusicLadder", e.toString())
+            Log.d("MusicLadder", e.toString())
         }
     }
-
-
-    //vm.setCurrentUserId("user_1") // TODO MOST IMPORTANT FOR WHEN SOMEONE LOGS IN
 }
 
