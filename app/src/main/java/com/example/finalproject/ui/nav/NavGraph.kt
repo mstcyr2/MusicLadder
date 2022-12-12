@@ -76,10 +76,11 @@ fun PlaylistScreen(
     navController: NavHostController,
     vm: AppViewModel
 ) {
+    val state = remember { mutableStateOf(TextFieldValue("")) }
     val userPlaylists by vm.userPlaylists
     PlaylistsView(
         navController,
-        onSearch=vm::onSearch,
+        state,
         userPlaylists
     )
 }
