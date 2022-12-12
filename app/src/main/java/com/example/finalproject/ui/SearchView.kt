@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -21,22 +23,15 @@ import androidx.compose.ui.unit.dp
 import com.example.finalproject.ui.data.Playlist
 
 @Composable
-fun SearchBar(onSearch: (String) -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-    var searchText: String by remember { mutableStateOf("") }
-    OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        value = searchText,
-        onValueChange = { v: String ->
-            searchText = v
+fun SearchBar(state: MutableState<TextFieldValue>) {
+    TextField(
+        value = state.value,
+        onValueChange = { value ->
+            state.value = value
         },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.dp),
         leadingIcon = {
             Icon(
                 Icons.Default.Search,
@@ -46,61 +41,27 @@ fun SearchBar(onSearch: (String) -> Unit) {
                     .size(24.dp)
             )
         },
-        placeholder = {
-            Text("Search for a playlist")
+        trailingIcon = {
+            if(state.value != TextFieldValue("")) {
+                IconButton(
+                    onClick = {state.value = TextFieldValue("") }
+                ) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .padding(15.dp)
+                            .size(24.dp)
+                    )
+                }
+            }
         },
         singleLine = true,
-        keyboardOptions = KeyboardOptions.Default.copy(
-            capitalization = KeyboardCapitalization.Sentences,
-            autoCorrect = false,
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Go
-        ),
-        keyboardActions = KeyboardActions(
-            onGo = {
-                onSearch(searchText)
-            }
+        shape = RectangleShape,
+        colors = TextFieldDefaults.textFieldColors(
+            focusedIndicatorColor = Color.Magenta,
+            unfocusedIndicatorColor = Color.Magenta,
+            disabledIndicatorColor = Color.Transparent
         )
     )
-        Button(
-            onClick = { onSearch(searchText) },
-            modifier = Modifier.padding(start = 10.dp)
-        ) {
-            Text("Search")
-        }
-    }
-
-//    TextField(
-//        value = list.value,
-//        onValueChange = { value ->
-//            list.value = value
-//        },
-//        modifier = Modifier
-//            .fillMaxWidth(),
-//        leadingIcon = {
-//            Icon(
-//                Icons.Default.Search,
-//                contentDescription = "",
-//                modifier = Modifier
-//                    .padding(15.dp)
-//                    .size(24.dp)
-//            )
-//        },
-//        trailingIcon = {
-//            if(list.value != TextFieldValue("")) {
-//                IconButton(
-//                    onClick = {list.value = TextFieldValue("") }
-//                ) {
-//                    Icon(
-//                        Icons.Default.Close,
-//                        contentDescription = "",
-//                        modifier = Modifier
-//                            .padding(15.dp)
-//                            .size(24.dp)
-//                    )
-//                }
-//            }
-//        },
-//        singleLine = true
-//    )
 }

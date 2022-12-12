@@ -144,16 +144,6 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
         _likedSongs.value = getLikedSongs(user_id)
     }
 
-    fun onSearch(search: String) {
-        _userPlaylists.value =
-            userPlaylists
-                .value
-                .filter { p -> p
-                    .title
-                    .contains(search, true)
-                }
-    }
-
     suspend fun addNewSong(
         id: String,
         title: String,
