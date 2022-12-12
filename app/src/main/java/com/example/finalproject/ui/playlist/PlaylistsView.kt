@@ -15,19 +15,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.finalproject.ui.data.Playlist
 import com.example.finalproject.ui.nav.Routes
-import com.example.finalproject.ui.viewmodel.AppViewModel
-import java.util.*
-import kotlin.collections.ArrayList
 
 @Composable
 fun PlaylistsView(
     navController: NavHostController,
-    onSearch: (String) -> Unit,
+    state: MutableState<TextFieldValue>,
     list: List<Playlist>
 ) {
-    val textList = remember { mutableStateOf(TextFieldValue("")) }
-    val items by remember { mutableStateOf(listOf(list.toString())) }
-    val searchedText = textList.value.text
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier
@@ -38,23 +32,51 @@ fun PlaylistsView(
         }
 
         ButtonsBrowse(navController)
-        SearchBar(onSearch = onSearch)
-        LazyColumn(modifier = Modifier.background(Color.Magenta)){
-            items(list) { playlist: Playlist ->
-                Card(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 2.dp),
-                    elevation = 5.dp,
-                    shape = RectangleShape
-                ) {
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+        SearchBar(state)
+        LazyColumn(modifier = Modifier.background(Color.Magenta)) {
+            val searchedText = state.value.text
+            if (searchedText.isEmpty()) {
+                items(list) { playlist: Playlist ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 2.dp),
+                        elevation = 5.dp,
+                        shape = RectangleShape
                     ) {
-                        Text(text = playlist.title)
-                        Text(text = playlist.songCount.toString())
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = playlist.title)
+                            Text(text = playlist.songCount.toString())
+                        }
+                    }
+                }
+            } else {
+                items(list) { playlist: Playlist ->
+                    if(playlist.title.lowercase().contains(searchedText.lowercase())) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 2.dp),
+                            elevation = 5.dp,
+                            shape = RectangleShape
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(20.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(text = playlist.title)
+                                Text(text = playlist.songCount.toString())
+                            }
+                        }
                     }
                 }
             }
