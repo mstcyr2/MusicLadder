@@ -29,13 +29,14 @@ fun NavGraph() {
     ) {
         composable(Routes.Landing.route) {
             LandingScreen(navController = navController, vm = vm)
-
+            vm.setSortedSongs()
+            vm.setTopTen()
             Log.d("App", "Navigated to the landing page")
         }
 
         composable(Routes.Browse.route) {
             BrowseScreen(navController = navController, vm = vm)
-
+            vm.setSortedSongs()
             Log.d("App", "Navigated to the browse page")
         }
 
@@ -51,6 +52,7 @@ fun NavGraph() {
                 navController = navController,
                 vm
             )
+            vm.setUserPlaylists(vm.currentUser.value)
 
             Log.d("App", "Navigated to the playlist page")
         }

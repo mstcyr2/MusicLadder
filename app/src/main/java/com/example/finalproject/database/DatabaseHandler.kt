@@ -4,21 +4,23 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import androidx.core.database.getStringOrNull
 import com.example.finalproject.database.models.LikedSongsModel
 import com.example.finalproject.database.models.PlaylistModel
 import com.example.finalproject.database.models.PlaylistSongsModel
 import com.example.finalproject.database.models.SongModel
+import com.readystatesoftware.sqliteasset.SQLiteAssetHelper
 
 interface SongInterface {
     suspend fun readSongs(): ArrayList<SongModel>
 }
 
-class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION), SongInterface {
+
+
+class DatabaseHandler(context: Context?) : SQLiteAssetHelper(context, DB_NAME, null, DB_VERSION), SongInterface {
     companion object {
         // Database constants
-        private const val DB_NAME = "musicladder"
+        private const val DB_NAME = "musicladder.db"
         private const val DB_VERSION = 1
         private const val SONGS_TABLE_NAME = "songs"
         private const val USERS_TABLE_NAME = "users"
@@ -63,107 +65,10 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
         db?.execSQL("DROP TABLE IF EXISTS $USERS_TABLE_NAME")
         onCreate(db)
     }
-
-    override fun onCreate(db: SQLiteDatabase?) {
-
-        val query = ("CREATE TABLE IF NOT EXISTS " + SONGS_TABLE_NAME + " ("
-                + ID_COL + " TEXT PRIMARY KEY, "
-                + NAME_COL + " TEXT,"
-                + ARTIST_COL + " TEXT,"
-                + CATEGORY_COL + " TEXT,"
-                + LIKES_COL + " INTEGER,"
-                + SPOTIFY_COL + " TEXT)")
-
-        db?.execSQL(query)
-
-        val query1 = ("CREATE TABLE IF NOT EXISTS " + USERS_TABLE_NAME + " ("
-                + ID_COL_USER + " TEXT PRIMARY KEY, "
-                + USERNAME_COL_USER + " TEXT,"
-                + PASSWORD_COL_USER + " TEXT)")
-
-        db?.execSQL(query1)
-
-        val query2 = ("CREATE TABLE IF NOT EXISTS " + LIKED_SONGS_TABLE_NAME + " ("
-                + ID_COL_LIKED_SONGS + " TEXT PRIMARY KEY, "
-                + USER_ID_COL_LIKED + " TEXT, "
-                + LIKED_SONG_COL + " TEXT)")
-
-        db?.execSQL(query2)
-
-        // Table for PLAYLISTS user songs
-        val query3 = ("CREATE TABLE IF NOT EXISTS " + PLAYLISTS_SONGS_TABLE_NAME + " ("
-                + ID_COL_PLAYLIST_SONG + " TEXT PRIMARY KEY, "
-                + SONG_PLAYLIST_ID + " TEXT, "
-                + USER_ID_COL_PLAYLIST_SONG + " TEXT, "
-                + SONG_ID_COL_PLAYLIST_SONG + " TEXT)")
-
-        db?.execSQL(query3)
-
-        // Table for PLAYLIST origins
-        val query5 = ("CREATE TABLE IF NOT EXISTS " + PLAYLISTS_TABLE_NAME + " ("
-                + ID_COL_PLAYLIST + " TEXT PRIMARY KEY, "
-                + USER_ID_COL_PLAYLIST + " TEXT, "
-                + PLAYLIST_NAME_COL + " TEXT)")
-
-        db?.execSQL(query5)
-    }
-
-    fun createMainTables() {
-        val db = this.writableDatabase
-
-        val query4 = ("CREATE TABLE IF NOT EXISTS " + LIKED_SONGS_TABLE_NAME + " ("
-                + ID_COL_LIKED_SONGS + " TEXT PRIMARY KEY, "
-                + USER_ID_COL_LIKED + " TEXT, "
-                + LIKED_SONG_COL + " TEXT)")
-
-        db?.execSQL(query4)
-
-        // Songs Table
-        val query = ("CREATE TABLE IF NOT EXISTS " + SONGS_TABLE_NAME + " ("
-                + ID_COL + " TEXT PRIMARY KEY, "
-                + NAME_COL + " TEXT,"
-                + ARTIST_COL + " TEXT,"
-                + CATEGORY_COL + " TEXT,"
-                + LIKES_COL + " INTEGER,"
-                + SPOTIFY_COL + " TEXT)")
-
-        db?.execSQL(query)
-
-        // Users Table
-        val query3 = ("CREATE TABLE IF NOT EXISTS " + USERS_TABLE_NAME + " ("
-                + ID_COL_USER + " TEXT PRIMARY KEY, "
-                + USERNAME_COL_USER + " TEXT,"
-                + PASSWORD_COL_USER + " TEXT)")
-
-        db?.execSQL(query3)
-
-        // Table for PLAYLISTS user songs
-        val query6 = ("CREATE TABLE IF NOT EXISTS " + PLAYLISTS_SONGS_TABLE_NAME + " ("
-                + ID_COL_PLAYLIST_SONG + " TEXT PRIMARY KEY, "
-                + USER_ID_COL_PLAYLIST_SONG + " TEXT, "
-                + SONG_ID_COL_PLAYLIST_SONG + " TEXT)")
-
-        db?.execSQL(query6)
-
-        // Table for PLAYLIST origins
-        val query7 = ("CREATE TABLE IF NOT EXISTS " + PLAYLISTS_TABLE_NAME + " ("
-                + ID_COL_PLAYLIST + " TEXT PRIMARY KEY, "
-                + USER_ID_COL_PLAYLIST + " TEXT, "
-                + PLAYLIST_NAME_COL + " TEXT)")
-
-        db?.execSQL(query7)
-    }
-
+    
 
     fun addNewPlaylist(user_id: String, playlist_name: String) {
         val db = this.writableDatabase
-
-        val query7 = ("CREATE TABLE IF NOT EXISTS " + PLAYLISTS_TABLE_NAME + " ("
-                + ID_COL_PLAYLIST + " TEXT PRIMARY KEY, "
-                + USER_ID_COL_PLAYLIST + " TEXT, "
-                + PLAYLIST_NAME_COL + " TEXT)")
-
-        db?.execSQL(query7)
 
         val values = ContentValues()
 
@@ -211,14 +116,20 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
      * song_id from the playlists page
      */
     fun deleteSongFromPlaylist(
+        playlist_id: String?,
         user_id: String?,
         song_id: String?
     ){
         val db = this.writableDatabase
 
-        val query = ("DELETE FROM $PLAYLISTS_SONGS_TABLE_NAME WHERE $USER_ID_COL_PLAYLIST_SONG='$user_id' AND $SONG_ID_COL_PLAYLIST_SONG='$song_id'")
+
+        val query = ("DELETE FROM $PLAYLISTS_SONGS_TABLE_NAME " +
+                "WHERE $USER_ID_COL_PLAYLIST_SONG='$user_id' " +
+                "AND $SONG_ID_COL_PLAYLIST_SONG='$song_id' " +
+                "AND $SONG_PLAYLIST_ID='$playlist_id'")
 
         db?.execSQL(query)
+        db.close()
     }
 
     /**
@@ -232,6 +143,7 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
         user_id: String?
     ) : ArrayList<String> {
         val db = this.readableDatabase
+
         val cursor: Cursor = db.rawQuery(
             "SELECT * FROM $PLAYLISTS_SONGS_TABLE_NAME " +
                     "WHERE $USER_ID_COL_PLAYLIST_SONG='$user_id' AND $SONG_PLAYLIST_ID='$playlist_id'", null)
@@ -335,6 +247,7 @@ class DatabaseHandler(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
     fun likeSong(user_id: String, song: SongModel) {
         val db = this.writableDatabase
         val values = ContentValues()
+        values.clear()
 
         val newLiked = song.likes + 1
 

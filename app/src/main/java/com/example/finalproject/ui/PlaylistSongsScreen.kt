@@ -4,7 +4,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,15 +56,21 @@ fun PlaylistSongList(
             itemsIndexed(songs) { i, song ->
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .height(54.dp)) {
-                    SongCard(Song(
-                        rank = i+1,
-                        title = song.song_name,
-                        artist = song.artist_name,
-                        liked = remember { mutableStateOf(likedSongs.contains(song.song_id)) }),
-                        spotify_link = song.spotify_link,
-                        songObject = song,
-                        vm = vm)
+                    .height(106.dp)) {
+                    Column() {
+                        IconButton(onClick = { vm.deleteSongFromPlaylist(vm.currentPlaylist.value, vm.currentUser.value, song.song_id) }) {
+                            Icon(imageVector = Icons.Outlined.Delete, contentDescription = "Delete Song")
+                        }
+                        SongCard(Song(
+                            rank = i+1,
+                            title = song.song_name,
+                            artist = song.artist_name,
+                            liked = remember { mutableStateOf(likedSongs.contains(song.song_id)) }),
+                            spotify_link = song.spotify_link,
+                            songObject = song,
+                            vm = vm)
+                    }
+
                 }
             }
         }

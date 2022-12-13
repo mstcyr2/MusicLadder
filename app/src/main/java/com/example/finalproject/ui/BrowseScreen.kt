@@ -74,7 +74,7 @@ fun CategoryOrganization(
             items(categoryNames.size) { index : Int ->
                 Row(
                     modifier = Modifier.padding(end = 8.dp),
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.Center,
                 ) {
                     BrowseCard(navController = navController, icon = "ICON", category = categoryNames[index], vm = vm)
                 }
@@ -112,14 +112,10 @@ fun BrowseCard(
             modifier = Modifier
                 .width(cardWidth)
                 .padding(all = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
-            Column() {
-                Text(icon, color = Color.Magenta)
-            }
-            Column(modifier = Modifier.padding(horizontal = 4.dp)) {
-                Text(category, color = Color.Magenta)
-            }
+            Text(category, color = Color.Magenta)
         }
     }
 }

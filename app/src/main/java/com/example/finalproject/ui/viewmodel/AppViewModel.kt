@@ -37,6 +37,9 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
     private val _currentPlaylistSongs = mutableStateOf(ArrayList<SongModel>())
     val currentPlaylistSongs = _currentPlaylistSongs
 
+    private val _currentPlaylist = mutableStateOf("")
+    val currentPlaylist = _currentPlaylist
+
     private val _selectedCategory = mutableStateOf("")
     val selectedCategory = _selectedCategory
 
@@ -54,7 +57,7 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
     init {
         viewModelScope.launch {
             _repository = AppRepository(getApplication())
-            _repository.createTables()
+            //_repository.createTables()
             _sortedSongs.value = _repository.sortByLikes()
             for (i in 0..9) {
                 if (i < _sortedSongs.value.size) {
@@ -80,7 +83,7 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
                 NotificationManagerCompat.from(getApplication<Application>().applicationContext)
                     .notify(likesInTT.hashCode(), notif)
             }
-            _userPlaylists.value = getUserPlaylists(user_id)
+            setUserPlaylists(user_id)
 
         } else {
             _currentUser.value = user_id
@@ -131,8 +134,9 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
         return _repository.getUserLikes(user_id)
     }
 
-    fun getUserPlaylists(user_id : String) : ArrayList<PlaylistModel> {
-        return _repository.getUserPlaylists(user_id)
+
+    fun setUserPlaylists(user_id : String) {
+        _userPlaylists.value = _repository.getUserPlaylists(user_id)
     }
 
     fun getUserPlaylistSongs(playlist_id : String, user_id : String) : ArrayList<String> {
@@ -140,7 +144,8 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
     }
 
     fun onOpenPlaylist(playlist_id: String) {
-        _currentPlaylistSongs.value = ArrayList()
+        _currentPlaylistSongs.value = ArrayList<SongModel>()
+        _currentPlaylist.value = playlist_id
         val playlistSongs = getUserPlaylistSongs(playlist_id, _currentUser.value)
         for(song in _sortedSongs.value) {
             if (playlistSongs.contains(song.song_id)) {
@@ -151,6 +156,19 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
 
     fun onAddSongToPlaylist(playlist_id : String, song_id: String) {
         _repository.addSongToPlaylist(playlist_id, _currentUser.value, song_id)
+        onOpenPlaylist(playlist_id)
+    }
+    fun deleteSongFromPlaylist(
+        playlist_id: String,
+        user_id: String,
+        song_id: String
+    ) {
+        _repository.deleteSongFromPlaylist(
+            playlist_id,
+            user_id,
+            song_id
+        )
+        onOpenPlaylist(playlist_id)
     }
 
     fun onLikeSong(user_id : String, song : SongModel, isLiked : Boolean) {
@@ -158,8 +176,22 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
         _likedSongs.value = getLikedSongs(user_id)
     }
 
+    fun setSortedSongs() {
+        _sortedSongs.value = _repository.sortByLikes()
+    }
+
+    fun setTopTen() {
+        _topTen.value = ArrayList()
+        for (i in 0..9) {
+            if (i < _sortedSongs.value.size) {
+                _topTen.value.add(_sortedSongs.value[i])
+            }
+        }
+    }
+
     fun addNewPlaylist(user_id: String, playlist_name: String) {
         _repository.addNewPlaylist(user_id, playlist_name)
+        setUserPlaylists(user_id)
     }
 
     suspend fun addNewSong(

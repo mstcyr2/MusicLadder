@@ -9,9 +9,9 @@ class AppRepository(context: Context) : IRepository() {
 
     private val dbHandler : DatabaseHandler = DatabaseHandler(context)
 
-    override fun createTables() {
-        dbHandler.createMainTables()
-    }
+//    override fun createTables() {
+//        dbHandler.createMainTables()
+//    }
 
     override suspend fun getSongs() : ArrayList<SongModel> {
         return dbHandler.readSongs()
@@ -73,10 +73,11 @@ class AppRepository(context: Context) : IRepository() {
         dbHandler.addNewSongToPlaylist(playlist_id, user_id, song_id)
     }
     override fun deleteSongFromPlaylist(
+        playlist_id: String?,
         user_id: String?,
         song_id: String?
     ) {
-        deleteSongFromPlaylist(user_id, song_id)
+        dbHandler.deleteSongFromPlaylist(playlist_id, user_id, song_id)
     }
     override fun getSongsFromPlaylist(
         playlist_id: String?,
