@@ -21,3 +21,6 @@ There are not many music charts displaying the number of users actually liking s
 *	https://developer.android.com/reference/android/database/sqlite/SQLiteDatabase
 *	https://developer.android.com/develop/ui/views/notifications/build-notification
 *	https://developer.android.com/training/data-storage/sqlite
+* https://www.geeksforgeeks.org/assets-folder-in-android/amp/
+* https://developer.android.com/codelabs/basic-android-kotlin-training-repository-pattern#5
+* https://medium.com/smartherd/how-to-create-toast-message-in-jetpack-compose-android-6144c2749ae0
