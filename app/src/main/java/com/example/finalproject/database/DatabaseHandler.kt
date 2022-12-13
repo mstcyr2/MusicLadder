@@ -63,7 +63,16 @@ class DatabaseHandler(context: Context?) : SQLiteAssetHelper(context, DB_NAME, n
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS $SONGS_TABLE_NAME")
         db?.execSQL("DROP TABLE IF EXISTS $USERS_TABLE_NAME")
+        db?.execSQL("DROP TABLE IF EXISTS $LIKED_SONGS_TABLE_NAME")
+        db?.execSQL("DROP TABLE IF EXISTS $PLAYLISTS_TABLE_NAME")
+        db?.execSQL("DROP TABLE IF EXISTS $PLAYLISTS_SONGS_TABLE_NAME")
         onCreate(db)
+    }
+
+    fun createTables() {
+        val db = this.writableDatabase
+        onCreate(db)
+        db.close()
     }
     
 
@@ -189,6 +198,7 @@ class DatabaseHandler(context: Context?) : SQLiteAssetHelper(context, DB_NAME, n
                     )
                 )
             } while (cursor.moveToNext())
+            db.close()
             cursor.close()
             return playlists
         }
@@ -350,8 +360,12 @@ class DatabaseHandler(context: Context?) : SQLiteAssetHelper(context, DB_NAME, n
                     "WHERE $USERNAME_COL_USER='$username' " +
                     "AND $PASSWORD_COL_USER='$password'" ,
             null)
-        if (cursor.moveToFirst())
-            return cursor.getStringOrNull(0)
+        if (cursor.moveToFirst()) {
+            val str = cursor.getStringOrNull(0)
+            db.close()
+            cursor.close()
+            return str
+        }
         cursor.close()
         db.close()
         return null
@@ -361,8 +375,12 @@ class DatabaseHandler(context: Context?) : SQLiteAssetHelper(context, DB_NAME, n
         val db = this.readableDatabase
         val cursor : Cursor = db.rawQuery("SELECT $USERNAME_COL_USER FROM $USERS_TABLE_NAME " +
                 "WHERE $ID_COL_USER='$user_id'", null)
-        if(cursor.moveToFirst())
-            return cursor.getStringOrNull(0)
+        if (cursor.moveToFirst()) {
+            val str = cursor.getStringOrNull(0)
+            db.close()
+            cursor.close()
+            return str
+        }
         cursor.close()
         db.close()
         return null

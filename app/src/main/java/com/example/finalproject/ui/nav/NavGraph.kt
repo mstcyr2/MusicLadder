@@ -28,9 +28,9 @@ fun NavGraph() {
         startDestination = Routes.Landing.route
     ) {
         composable(Routes.Landing.route) {
-            LandingScreen(navController = navController, vm = vm)
             vm.setSortedSongs()
             vm.setTopTen()
+            LandingScreen(navController = navController, vm = vm)
             Log.d("App", "Navigated to the landing page")
         }
 

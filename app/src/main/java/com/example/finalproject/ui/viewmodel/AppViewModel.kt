@@ -57,7 +57,7 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
     init {
         viewModelScope.launch {
             _repository = AppRepository(getApplication())
-            //_repository.createTables()
+            _repository.createTables()
             _sortedSongs.value = _repository.sortByLikes()
             for (i in 0..9) {
                 if (i < _sortedSongs.value.size) {
@@ -231,7 +231,7 @@ class AppViewModel(app : Application) : AndroidViewModel(app) {
     }
 
     companion object {
-        val CHANNEL_ID = "com.example.finalproject.channel"
+        const val CHANNEL_ID = "com.example.finalproject.channel"
     }
 
 }

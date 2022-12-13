@@ -4,7 +4,7 @@ import com.example.finalproject.database.models.PlaylistModel
 import com.example.finalproject.database.models.SongModel
 
 abstract class IRepository {
-    //abstract fun createTables()
+    abstract fun createTables()
     abstract suspend fun getSongs() : ArrayList<SongModel>
     abstract fun sortByLikes() : ArrayList<SongModel>
     abstract fun filterByGenre(genre : String) : ArrayList<SongModel>

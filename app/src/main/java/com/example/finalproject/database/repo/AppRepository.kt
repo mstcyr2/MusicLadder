@@ -9,9 +9,9 @@ class AppRepository(context: Context) : IRepository() {
 
     private val dbHandler : DatabaseHandler = DatabaseHandler(context)
 
-//    override fun createTables() {
-//        dbHandler.createMainTables()
-//    }
+    override fun createTables() {
+        dbHandler.createTables()
+    }
 
     override suspend fun getSongs() : ArrayList<SongModel> {
         return dbHandler.readSongs()
